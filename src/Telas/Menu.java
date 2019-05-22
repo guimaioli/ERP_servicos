@@ -282,9 +282,12 @@ public class Menu extends javax.swing.JFrame {
         }
         login.setVisible(true);
     }//GEN-LAST:event_jButton4ActionPerformed
-
+    CadastroServico s;
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //cadastro.setVisible(true);
+        if (s == null){
+            s = new CadastroServico();
+        }
+        s.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
