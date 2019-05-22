@@ -1,0 +1,65 @@
+-- drop database empresa;
+
+CREATE DATABASE empresa;
+USE empresa;
+
+CREATE TABLE pessoas (
+codigo INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+tipo VARCHAR(10) NOT NULL,
+cpf VARCHAR(12) NULL,
+nome VARCHAR(60) NULL,
+cnpj VARCHAR(14) NULL,
+classificacao VARCHAR(20) NOT NULL,
+estado_civil VARCHAR(20) NOT NULL,
+estado VARCHAR(10) NOT NULL,
+celular VARCHAR(10) NULL,
+bairro VARCHAR(10) NULL,
+endereco VARCHAR(10) NULL,
+telefone VARCHAR(10) NULL,
+cidade VARCHAR(10) NULL,
+login VARCHAR(10) NULL,
+senha VARCHAR(10) NULL,
+PRIMARY KEY(codigo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE contratos (
+codContrato INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+codCliente INTEGER UNSIGNED NOT NULL,
+dataInicial DATE NULL,
+dataFim DATE NULL,
+situacao VARCHAR(10) NOT NULL,
+valorContrato REAL(7,2) NULL,
+condPagamento VARCHAR(10) NULL,
+PRIMARY KEY(codContrato),
+FOREIGN KEY (codCliente) REFERENCES pessoas(codigo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE duplicatas (
+codigo INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+sequencial INTEGER UNSIGNED NOT NULL,
+codContrato INTEGER UNSIGNED NOT NULL,
+dataVencimento DATE NULL,
+valor REAL(7,2) NULL,
+PRIMARY KEY (codigo)
+-- FOREIGN KEY (codContrato) REFERENCES contratos(codContrato),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE Servicos (
+codServico INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+descricao VARCHAR(20) NOT NULL,
+descricaoComplementar VARCHAR(500) NULL,
+PRIMARY KEY (codServico) 
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE servicosContrato (
+codigo INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+codContrato INTEGER UNSIGNED NOT NULL,
+codServico INTEGER UNSIGNED NOT NULL,
+codFuncionario INTEGER UNSIGNED NOT NULL ,
+valor REAL(7,2) NULL,
+observacao VARCHAR(100) NULL,
+PRIMARY KEY (codigo),
+FOREIGN KEY (codContrato) REFERENCES contratos(codContrato),
+FOREIGN KEY (codServico) REFERENCES servicos(codServico),
+FOREIGN KEY (codFuncionario) REFERENCES pessoas(codigo)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

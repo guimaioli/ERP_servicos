@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 17/05/2019 16:35:06 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="trabalho.Contratos" table="contratos" catalog="empresa" optimistic-lock="version">
+        <id name="codContrato" type="java.lang.Integer">
+            <column name="codContrato" />
+            <generator class="identity" />
+        </id>
+        <many-to-one name="pessoas" class="trabalho.Pessoas" fetch="select">
+            <column name="codCliente" not-null="true" />
+        </many-to-one>
+        <property name="dataInicial" type="date">
+            <column name="dataInicial" length="10" />
+        </property>
+        <property name="dataFim" type="date">
+            <column name="dataFim" length="10" />
+        </property>
+        <property name="situacao" type="string">
+            <column name="situacao" length="10" not-null="true" />
+        </property>
+        <property name="valorContrato" type="java.lang.Double">
+            <column name="valorContrato" precision="7" />
+        </property>
+        <property name="condPagamento" type="string">
+            <column name="condPagamento" length="10" />
+        </property>
+        <set name="servicoscontratos" table="servicoscontrato" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="codContrato" not-null="true" />
+            </key>
+            <one-to-many class="trabalho.Servicoscontrato" />
+        </set>
+    </class>
+</hibernate-mapping>
