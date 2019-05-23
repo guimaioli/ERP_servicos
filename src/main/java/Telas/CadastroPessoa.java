@@ -102,6 +102,44 @@ public class CadastroPessoa extends javax.swing.JFrame {
         return true;
     }
     
+    private boolean ValidaTamanho() {
+        try{
+            if (txtNome.getText().length() > 60){
+                txtNome.requestFocus();
+                throw new Exception("Campo NOME maior que o permitido!");
+            } else if (txtCidade.getText().length() > 40){
+                txtCidade.requestFocus();
+                throw new Exception("Campo CIDADE maior que o permitido!");
+            } else if (txtEndereco.getText().length() > 40){
+                txtEndereco.requestFocus();
+                throw new Exception("Campo ENDEREÇO maior que o permitido!");
+            } else if (txtBairro.getText().length() > 40){
+                txtBairro.requestFocus();
+                throw new Exception("Campo BAIRRO maior que o permitido!");
+            } else if (txtTelefone.getText().length() > 20){
+                txtTelefone.requestFocus();
+                throw new Exception("Campo TELEFONE maior que o permitido!");
+            } else if (txtCelular.getText().length() > 20){
+                txtCelular.requestFocus();
+                throw new Exception("Campo CELULAR maior que o permitido!");
+            }else if (txtLogin.getText().length() > 10){
+                if (temLogin()){
+                    txtLogin.requestFocus();
+                    throw new Exception("Campo LOGIN maior que o permitido!");
+                }
+            }else if (txtSenha.getText().length() > 10){
+                if (temLogin()){
+                    txtSenha.requestFocus();
+                    throw new Exception("Campo SENHA maior que o permitido!");
+                }
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;     
+    }
+    
     private void tipoChange() {
         if ("Física".equals(comTipo.getSelectedItem().toString())) {
             txtCnpj.setText("");
@@ -476,21 +514,22 @@ public class CadastroPessoa extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    Menu m;
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        try{
+//        try{
             Limpar();
             this.setVisible(false); 
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
-        }
+            m.setVisible(true);
+//        }catch (Exception e){
+//            JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
+//        }
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String nome = txtNome.getText();
         String tipo = comTipo.getSelectedItem().toString();
-        String cpf = txtCpf.getText();
+        String cpf = txtCpf.getText().replaceAll("\\D", "");
         String cnpj = txtCnpj.getText().replaceAll("\\D", "");
         String classificao = comCla.getSelectedItem().toString();
         String estadoCivil = comEstadoCivil.getSelectedItem().toString();
@@ -503,7 +542,7 @@ public class CadastroPessoa extends javax.swing.JFrame {
         String login = txtLogin.getText();
         String senha = txtSenha.getText();
         try {
-            if (!ValidaValores()) {
+            if ((!ValidaValores()) || (!ValidaTamanho())) {
                 throw new Exception();
             }
             Pessoas p = new Pessoas(tipo, cpf, nome, cnpj, classificao, estadoCivil, 
@@ -516,11 +555,11 @@ public class CadastroPessoa extends javax.swing.JFrame {
             session.close();
             JOptionPane.showMessageDialog(this,"Pessoa cadastrada com sucesso!",
                                           "Atenção", JOptionPane.INFORMATION_MESSAGE);
+            Limpar();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
         }
-        Limpar();
-        
+       
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
