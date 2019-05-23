@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 17/05/2019 16:35:06 by Hibernate Tools 4.3.1 -->
+<hibernate-mapping>
+    <class name="trabalho.Duplicatas" table="duplicatas" catalog="empresa" optimistic-lock="version">
+        <id name="codigo" type="java.lang.Integer">
+            <column name="codigo" />
+            <generator class="identity" />
+        </id>
+        <property name="sequencial" type="int">
+            <column name="sequencial" not-null="true" />
+        </property>
+        <property name="codContrato" type="int">
+            <column name="codContrato" not-null="true" />
+        </property>
+        <property name="dataVencimento" type="date">
+            <column name="dataVencimento" length="10" />
+        </property>
+        <property name="valor" type="java.lang.Double">
+            <column name="valor" precision="7" />
+        </property>
+    </class>
+</hibernate-mapping>

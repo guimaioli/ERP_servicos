@@ -44,7 +44,7 @@ PRIMARY KEY (codigo)
 -- FOREIGN KEY (codContrato) REFERENCES contratos(codContrato),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE Servicos (
+CREATE TABLE servicos (
 codServico INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
 descricao VARCHAR(20) NOT NULL,
 descricaoComplementar VARCHAR(500) NULL,
