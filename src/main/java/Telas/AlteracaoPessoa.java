@@ -45,12 +45,23 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
         try {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Query query = session.createQuery("from Pessoas where codigo = :id");
-            query.setInteger(id, id);
+            query.setParameter("id", id);
             query.setMaxResults(1);
             Pessoas p = (Pessoas) query.uniqueResult();
             txtNome.setText(p.getNome());
             comTipo.setSelectedItem(p.getTipo());
             comCla.setSelectedItem(p.getClassificacao());
+            if ((comCla.getSelectedItem().toString()).equals("Física")){
+                txtCnpj.setText("");
+                txtCnpj.setVisible(false);
+                txtCpf.setVisible(true);
+                txtCpf.setText(p.getCpf());
+            } else {
+                txtCpf.setText("");
+                txtCpf.setVisible(false);
+                txtCnpj.setVisible(true);
+                txtCnpj.setText(p.getCnpj());
+            }
             comEstadoCivil.setSelectedItem(p.getEstadoCivil());
             txtCidade.setText(p.getCidade());
             comEstado.setSelectedItem(p.getEstado());
@@ -65,24 +76,43 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
         }     
     }
     
-//
-//    private void Limpar(){
-//        txtNome.setText("");
-//        comTipo.setSelectedItem("");
-//        txtCpf.setText("");
-//        comCla.setSelectedItem("");
-//        comEstadoCivil.setSelectedItem("");
-//        txtCidade.setText("");
-//        comEstado.setSelectedItem("");
-//        txtEndereco.setText("");
-//        txtBairro.setText("");
-//        txtTelefone.setText("");
-//        txtCelular.setText("");
-//   
-//        txtLogin.setText("");
-//        txtSenha.setText("");
-//        txtNome.requestFocus();
-//    }
+    private boolean ValidaTamanho() {
+        try{
+            if (txtNome.getText().length() > 60){
+                txtNome.requestFocus();
+                throw new Exception("Campo NOME maior que o permitido!");
+            } else if (txtCidade.getText().length() > 40){
+                txtCidade.requestFocus();
+                throw new Exception("Campo CIDADE maior que o permitido!");
+            } else if (txtEndereco.getText().length() > 40){
+                txtEndereco.requestFocus();
+                throw new Exception("Campo ENDEREÇO maior que o permitido!");
+            } else if (txtBairro.getText().length() > 40){
+                txtBairro.requestFocus();
+                throw new Exception("Campo BAIRRO maior que o permitido!");
+            } else if (txtTelefone.getText().length() > 20){
+                txtTelefone.requestFocus();
+                throw new Exception("Campo TELEFONE maior que o permitido!");
+            } else if (txtCelular.getText().length() > 20){
+                txtCelular.requestFocus();
+                throw new Exception("Campo CELULAR maior que o permitido!");
+            }else if (txtLogin.getText().length() > 10){
+                if (temLogin()){
+                    txtLogin.requestFocus();
+                    throw new Exception("Campo LOGIN maior que o permitido!");
+                }
+            }else if (txtSenha.getText().length() > 10){
+                if (temLogin()){
+                    txtSenha.requestFocus();
+                    throw new Exception("Campo SENHA maior que o permitido!");
+                }
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;     
+    }
     
     private boolean ValidaValores(){
         try{
@@ -513,19 +543,19 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
         String login = txtLogin.getText();
         String senha = txtSenha.getText();
         try {
-            if (!ValidaValores()) {
-                throw new Exception();
+            if ((ValidaValores())&& (ValidaTamanho())) {
+                Pessoas p = new Pessoas(tipo, cpf, nome, cnpj, classificao, estadoCivil, 
+                                        estado, celular, bairro, endereco, telefone, cidade,
+                                        login, senha, null, null);
+                Session session = HibernateUtil.getSessionFactory().openSession();
+                Transaction transaction = session.beginTransaction();
+                session.saveOrUpdate(p);
+                transaction.commit();
+                session.close();
+                JOptionPane.showMessageDialog(this,"Pessoa alterada com sucesso!",
+                                              "Atenção", JOptionPane.INFORMATION_MESSAGE);
+                this.setVisible(false);
             }
-            Pessoas p = new Pessoas(tipo, cpf, nome, cnpj, classificao, estadoCivil, 
-                                    estado, celular, bairro, endereco, telefone, cidade,
-                                    login, senha, null, null);
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            session.saveOrUpdate(p);
-            transaction.commit();
-            session.close();
-            JOptionPane.showMessageDialog(this,"Pessoa alterada com sucesso!",
-                                          "Atenção", JOptionPane.INFORMATION_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
         }

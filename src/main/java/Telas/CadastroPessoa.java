@@ -520,9 +520,6 @@ public class CadastroPessoa extends javax.swing.JFrame {
             Limpar();
             this.setVisible(false); 
             m.setVisible(true);
-//        }catch (Exception e){
-//            JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
-//        }
         
     }//GEN-LAST:event_jButton2ActionPerformed
 
@@ -542,20 +539,19 @@ public class CadastroPessoa extends javax.swing.JFrame {
         String login = txtLogin.getText();
         String senha = txtSenha.getText();
         try {
-            if ((!ValidaValores()) || (!ValidaTamanho())) {
-                throw new Exception();
-            }
-            Pessoas p = new Pessoas(tipo, cpf, nome, cnpj, classificao, estadoCivil, 
+            if ((ValidaValores()) && (ValidaTamanho())) {
+                Pessoas p = new Pessoas(tipo, cpf, nome, cnpj, classificao, estadoCivil, 
                                     estado, celular, bairro, endereco, telefone, cidade,
                                     login, senha, null, null);
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            session.save(p);
-            transaction.commit();
-            session.close();
-            JOptionPane.showMessageDialog(this,"Pessoa cadastrada com sucesso!",
-                                          "Atenção", JOptionPane.INFORMATION_MESSAGE);
-            Limpar();
+                Session session = HibernateUtil.getSessionFactory().openSession();
+                Transaction transaction = session.beginTransaction();
+                session.save(p);
+                transaction.commit();
+                session.close();
+                JOptionPane.showMessageDialog(this,"Pessoa cadastrada com sucesso!",
+                                              "Atenção", JOptionPane.INFORMATION_MESSAGE);
+                Limpar();
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
         }

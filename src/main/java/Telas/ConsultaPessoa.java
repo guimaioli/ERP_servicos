@@ -30,7 +30,7 @@ public class ConsultaPessoa extends javax.swing.JFrame {
     public ConsultaPessoa(int codigo) {
         initComponents();
         this.codigo = codigo;
-        if (jComboBox1.getSelectedItem().toString().equals("")){
+        if (jComboBox1.getSelectedItem().toString().equals(" ")){
             Listar();
         } else {
             Listar(jComboBox1.getSelectedItem().toString());
@@ -112,7 +112,7 @@ public class ConsultaPessoa extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Consultar Doador");
+        setTitle("Consultar de Pessoas");
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formFocusLost(evt);
@@ -135,6 +135,7 @@ public class ConsultaPessoa extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.setCellSelectionEnabled(true);
         jTable1.getTableHeader().setReorderingAllowed(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -242,12 +243,17 @@ public class ConsultaPessoa extends javax.swing.JFrame {
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
         Listar(jComboBox1.getSelectedItem().toString());
     }//GEN-LAST:event_button1ActionPerformed
+    
     AlteracaoPessoa ap;
     private void cmdAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAlterarActionPerformed
-        if (ap == null){
-            ap = new AlteracaoPessoa(id2);
+        if (id2 == 0) {
+            JOptionPane.showMessageDialog(null, "Dê duplo click em cima da coluna Código da pessoa que deseja alterar.");
+        } else {
+            if (ap == null){
+                ap = new AlteracaoPessoa(id2);
+            }
+            ap.setVisible(true);
         }
-        ap.setVisible(true);
     }//GEN-LAST:event_cmdAlterarActionPerformed
 
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
@@ -259,11 +265,11 @@ public class ConsultaPessoa extends javax.swing.JFrame {
             id2 = Integer.parseInt(
                     ((DefaultTableModel) jTable1.getModel()).getValueAt(jTable1.getSelectedRow(), 0).toString());
         }
-        jTable1.clearSelection();
+        //jTable1.clearSelection();
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jTable1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseDragged
-        jTable1.clearSelection();
+        //jTable1.clearSelection();
     }//GEN-LAST:event_jTable1MouseDragged
 
     /**
