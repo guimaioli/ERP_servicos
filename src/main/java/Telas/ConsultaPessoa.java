@@ -112,7 +112,7 @@ public class ConsultaPessoa extends javax.swing.JFrame {
         jComboBox1 = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
-        setTitle("Consultar de Pessoas");
+        setTitle("Consulta de Pessoas");
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formFocusLost(evt);

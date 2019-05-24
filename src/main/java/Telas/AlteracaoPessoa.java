@@ -51,16 +51,27 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
             txtNome.setText(p.getNome());
             comTipo.setSelectedItem(p.getTipo());
             comCla.setSelectedItem(p.getClassificacao());
-            if ((comCla.getSelectedItem().toString()).equals("Física")){
+            if ((comTipo.getSelectedItem().toString()).equals("Física")){
+                jLabel13.setVisible(true);
+                jLabel13.setText("CPF:");
                 txtCnpj.setText("");
                 txtCnpj.setVisible(false);
                 txtCpf.setVisible(true);
                 txtCpf.setText(p.getCpf());
-            } else {
+            } else if ((comTipo.getSelectedItem().toString()).equals("Jurídica")){
+                jLabel13.setVisible(true);
+                jLabel13.setText("CNPJ:");
                 txtCpf.setText("");
                 txtCpf.setVisible(false);
                 txtCnpj.setVisible(true);
                 txtCnpj.setText(p.getCnpj());
+            } else {
+                jLabel13.setVisible(false);
+                jLabel13.setText("");
+                txtCpf.setText("");
+                txtCnpj.setText("");
+                txtCpf.setVisible(false);
+                txtCnpj.setVisible(false);
             }
             comEstadoCivil.setSelectedItem(p.getEstadoCivil());
             txtCidade.setText(p.getCidade());
@@ -261,7 +272,7 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Cadastro");
+        setTitle("Alteração de pessoa");
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formFocusLost(evt);
@@ -523,8 +534,7 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-
-        
+        this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
