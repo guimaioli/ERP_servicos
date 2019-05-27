@@ -35,9 +35,9 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
         
     }
 
-    private AlteracaoPessoa() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+//    private AlteracaoPessoa() {
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//    }
 
 
     
@@ -80,7 +80,9 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
             txtBairro.setText(p.getBairro());
             txtTelefone.setText(p.getTelefone());
             txtCelular.setText(p.getCelular());
-                                  
+            txtLogin.setText(p.getLogin());
+            txtSenha.setText(p.getCelular());
+            
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage(),
              "ERRO!", JOptionPane.ERROR_MESSAGE);
@@ -536,12 +538,13 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         this.setVisible(false);
     }//GEN-LAST:event_jButton2ActionPerformed
-
+    
+    ConsultaPessoa cp;
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String nome = txtNome.getText();
         String tipo = comTipo.getSelectedItem().toString();
-        String cpf = txtCpf.getText();
-        String cnpj = txtCnpj.getText();
+        String cpf = txtCpf.getText().replaceAll("\\D", "");;
+        String cnpj = txtCnpj.getText().replaceAll("\\D", "");;
         String classificao = comCla.getSelectedItem().toString();
         String estadoCivil = comEstadoCivil.getSelectedItem().toString();
         String cidade = txtCidade.getText();
@@ -553,17 +556,41 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
         String login = txtLogin.getText();
         String senha = txtSenha.getText();
         try {
-            if ((ValidaValores())&& (ValidaTamanho())) {
-                Pessoas p = new Pessoas(tipo, cpf, nome, cnpj, classificao, estadoCivil, 
-                                        estado, celular, bairro, endereco, telefone, cidade,
-                                        login, senha, null, null);
+            if (ValidaValores()&& ValidaTamanho()) {
+                //Pessoas p = new Pessoas(tipo, cpf, nome, cnpj, classificao, estadoCivil, 
+                //                        estado, celular, bairro, endereco, telefone, cidade,
+                //                        login, senha, null, null);
+                
                 Session session = HibernateUtil.getSessionFactory().openSession();
+                Pessoas p = (Pessoas) session.get(Pessoas.class, id);
                 Transaction transaction = session.beginTransaction();
-                session.saveOrUpdate(p);
+                p.setNome(nome);
+                p.setTipo(tipo);
+                if ("".equals(cnpj)){
+                    p.setCpf(cpf);
+                } else {
+                    p.setCnpj(cnpj);
+                }
+                p.setClassificacao(classificao);
+                p.setEstadoCivil(estadoCivil);
+                p.setCidade(cidade);
+                p.setEstado(estado);
+                p.setEndereco(endereco);
+                p.setBairro(bairro);
+                p.setTelefone(telefone);
+                p.setCelular(celular);
+                p.setLogin(login);
+                p.setSenha(senha);
+                session.update(p);
                 transaction.commit();
                 session.close();
                 JOptionPane.showMessageDialog(this,"Pessoa alterada com sucesso!",
                                               "Atenção", JOptionPane.INFORMATION_MESSAGE);
+                if (cp == null) {
+                    cp = new ConsultaPessoa();
+                }
+                cp.setVisible(true);
+                cp.Listar();
                 this.setVisible(false);
             }
         } catch (Exception e) {
@@ -579,6 +606,8 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
     private void comClaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comClaItemStateChanged
         jPanel3.setVisible(true);
         if ("Cliente".equals(comCla.getSelectedItem().toString())){
+            txtLogin.setText("");
+            txtSenha.setText("");
             jPanel3.setVisible(false);
         }
     }//GEN-LAST:event_comClaItemStateChanged
@@ -594,7 +623,7 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
 
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new AlteracaoPessoa().setVisible(true);
+                new AlteracaoPessoa(0).setVisible(true);
             }
         });
     }

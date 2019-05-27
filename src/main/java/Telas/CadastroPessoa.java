@@ -516,11 +516,9 @@ public class CadastroPessoa extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     Menu m;
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-//        try{
-            Limpar();
-            this.setVisible(false); 
-            m.setVisible(true);
-        
+        Limpar();
+        this.setVisible(false); 
+        m.setVisible(true);        
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -569,6 +567,8 @@ public class CadastroPessoa extends javax.swing.JFrame {
     private void comClaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comClaItemStateChanged
         jPanel3.setVisible(true);
         if (("Cliente".equals(comCla.getSelectedItem().toString())) || ("".equals(comCla.getSelectedItem().toString()))){
+            txtLogin.setText("");
+            txtSenha.setText("");
             jPanel3.setVisible(false);
         }
     }//GEN-LAST:event_comClaItemStateChanged
@@ -577,37 +577,7 @@ public class CadastroPessoa extends javax.swing.JFrame {
         this.requestFocus();
     }//GEN-LAST:event_formFocusLost
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 new CadastroPessoa().setVisible(true);

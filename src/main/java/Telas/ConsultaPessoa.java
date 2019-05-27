@@ -8,9 +8,11 @@ package Telas;
 import java.util.List;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import trabalho.HibernateUtil;
 import trabalho.Pessoas;
 
@@ -27,21 +29,25 @@ public class ConsultaPessoa extends javax.swing.JFrame {
     String id;
     int id2;
     
-    public ConsultaPessoa(int codigo) {
+    public ConsultaPessoa() {
         initComponents();
+        
         this.codigo = codigo;
-        if (jComboBox1.getSelectedItem().toString().equals(" ")){
-            Listar();
-        } else {
-            Listar(jComboBox1.getSelectedItem().toString());
-        }
+        ListarTabela();
         this.setLocationRelativeTo(null);
         
     }
     
 
+    private void ListarTabela() {
+        if (jComboBox1.getSelectedItem().toString().equals(" ")){
+            Listar();
+        } else {
+            Listar(jComboBox1.getSelectedItem().toString());
+        }
+    }
     
-    private void Listar(){
+    public void Listar(){
         ((DefaultTableModel)jTable1.getModel()).setRowCount(0);
         try{          
             Session session = HibernateUtil.getSessionFactory().openSession();
@@ -67,7 +73,7 @@ public class ConsultaPessoa extends javax.swing.JFrame {
         }
     }
     
-    private void Listar(String filtro){
+    public void Listar(String filtro){
         ((DefaultTableModel)jTable1.getModel()).setRowCount(0);
         try{          
             Session session = HibernateUtil.getSessionFactory().openSession();
@@ -135,7 +141,6 @@ public class ConsultaPessoa extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setCellSelectionEnabled(true);
         jTable1.getTableHeader().setReorderingAllowed(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -148,6 +153,7 @@ public class ConsultaPessoa extends javax.swing.JFrame {
             }
         });
         jScrollPane1.setViewportView(jTable1);
+        jTable1.getColumnModel().getSelectionModel().setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Filtro:");
@@ -237,7 +243,19 @@ public class ConsultaPessoa extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdSairActionPerformed
 
     private void cmdExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdExcluirActionPerformed
-        id = ((DefaultTableModel)jTable1.getModel()).getValueAt(jTable1.getSelectedRow(), 1).toString();
+        try {
+            if (JOptionPane.showConfirmDialog(this, "Confirma a exclusão? (Sim/Não)", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+                Session session = HibernateUtil.getSessionFactory().openSession();
+                Pessoas p = (Pessoas) session.get(Pessoas.class, id2);
+                Transaction transaction = session.beginTransaction();
+                session.delete(p);
+                transaction.commit();
+                session.close();
+                ListarTabela();
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_cmdExcluirActionPerformed
 
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
@@ -247,12 +265,13 @@ public class ConsultaPessoa extends javax.swing.JFrame {
     AlteracaoPessoa ap;
     private void cmdAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdAlterarActionPerformed
         if (id2 == 0) {
-            JOptionPane.showMessageDialog(null, "Dê duplo click em cima da coluna Código da pessoa que deseja alterar.");
+            JOptionPane.showMessageDialog(null, "Selecione o registro que deseja alterar.");
         } else {
             if (ap == null){
                 ap = new AlteracaoPessoa(id2);
             }
             ap.setVisible(true);
+            this.setVisible(false);
         }
     }//GEN-LAST:event_cmdAlterarActionPerformed
 
@@ -261,51 +280,20 @@ public class ConsultaPessoa extends javax.swing.JFrame {
     }//GEN-LAST:event_formFocusLost
 
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        if (evt.getClickCount() == 2) {
-            id2 = Integer.parseInt(
+        id2 = Integer.parseInt(
                     ((DefaultTableModel) jTable1.getModel()).getValueAt(jTable1.getSelectedRow(), 0).toString());
-        }
-        //jTable1.clearSelection();
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jTable1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseDragged
-        //jTable1.clearSelection();
+        jTable1.clearSelection();
     }//GEN-LAST:event_jTable1MouseDragged
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(ConsultaPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(ConsultaPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(ConsultaPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(ConsultaPessoa.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
-        /* Create and display the form */
+    public static void main(String args[]) {
+
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new ConsultaPessoa(0).setVisible(true);
+                new ConsultaPessoa().setVisible(true);
             }
         });
     }

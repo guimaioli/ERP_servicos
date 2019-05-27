@@ -304,7 +304,7 @@ public class Menu extends javax.swing.JFrame {
     ConsultaPessoa cp;
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         if (cp == null){
-            cp = new ConsultaPessoa(codigo);
+            cp = new ConsultaPessoa();
         }
         cp.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
