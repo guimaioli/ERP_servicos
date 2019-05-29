@@ -21,6 +21,7 @@ public class Menu extends javax.swing.JFrame {
      */
     
     int codigo;
+    String nome;
     public Menu(int codigo) {
         // 1 diretor
         // 2 funcionario
@@ -163,9 +164,9 @@ public class Menu extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addGap(26, 26, 26)
                 .addComponent(jButton3)
                 .addGap(18, 18, 18)
                 .addComponent(jButton5)
@@ -287,11 +288,12 @@ public class Menu extends javax.swing.JFrame {
         }
         s.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
-
+    ConsultaServico cs;
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        //ConsultaDoador consulta = new ConsultaDoador(this.codigo);
-        //consulta.setVisible(true);
-        this.setVisible(false);
+        if (cs == null){
+            cs = new ConsultaServico();
+        }
+        cs.setVisible(true);
     }//GEN-LAST:event_jButton2ActionPerformed
     CadastroPessoa p;
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed

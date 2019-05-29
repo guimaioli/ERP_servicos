@@ -40,6 +40,7 @@ public class ConsultaPessoa extends javax.swing.JFrame {
     
 
     private void ListarTabela() {
+        id2 = 0;
         if (jComboBox1.getSelectedItem().toString().equals(" ")){
             Listar();
         } else {
@@ -237,29 +238,33 @@ public class ConsultaPessoa extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cmdSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdSairActionPerformed
-        Menu form = new Menu(this.codigo);
-        form.setVisible(true);
+        //Menu form = new Menu(this.codigo);
+        //form.setVisible(true);
         this.setVisible(false);
     }//GEN-LAST:event_cmdSairActionPerformed
 
     private void cmdExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdExcluirActionPerformed
-        try {
-            if (JOptionPane.showConfirmDialog(this, "Confirma a exclusão? (Sim/Não)", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
-                Session session = HibernateUtil.getSessionFactory().openSession();
-                Pessoas p = (Pessoas) session.get(Pessoas.class, id2);
-                Transaction transaction = session.beginTransaction();
-                session.delete(p);
-                transaction.commit();
-                session.close();
-                ListarTabela();
+        if (id2 == 0) {
+            JOptionPane.showMessageDialog(null, "Selecione o registro que deseja excluir.");
+        } else {
+            try {
+                if (JOptionPane.showConfirmDialog(this, "Confirma a exclusão? ", "Confirmação", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+                    Session session = HibernateUtil.getSessionFactory().openSession();
+                    Pessoas p = (Pessoas) session.get(Pessoas.class, id2);
+                    Transaction transaction = session.beginTransaction();
+                    session.delete(p);
+                    transaction.commit();
+                    session.close();
+                    ListarTabela();
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_cmdExcluirActionPerformed
 
     private void button1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_button1ActionPerformed
-        Listar(jComboBox1.getSelectedItem().toString());
+        ListarTabela();
     }//GEN-LAST:event_button1ActionPerformed
     
     AlteracaoPessoa ap;
@@ -271,7 +276,6 @@ public class ConsultaPessoa extends javax.swing.JFrame {
                 ap = new AlteracaoPessoa(id2);
             }
             ap.setVisible(true);
-            this.setVisible(false);
         }
     }//GEN-LAST:event_cmdAlterarActionPerformed
 

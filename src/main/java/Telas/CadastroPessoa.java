@@ -514,11 +514,10 @@ public class CadastroPessoa extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    Menu m;
+
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Limpar();
-        this.setVisible(false); 
-        m.setVisible(true);        
+        this.setVisible(false);    
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -565,11 +564,14 @@ public class CadastroPessoa extends javax.swing.JFrame {
     }//GEN-LAST:event_comTipoItemStateChanged
 
     private void comClaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comClaItemStateChanged
-        jPanel3.setVisible(true);
         if (("Cliente".equals(comCla.getSelectedItem().toString())) || ("".equals(comCla.getSelectedItem().toString()))){
             txtLogin.setText("");
             txtSenha.setText("");
             jPanel3.setVisible(false);
+        } else {
+            txtLogin.setText("");
+            txtSenha.setText("");
+            jPanel3.setVisible(true);
         }
     }//GEN-LAST:event_comClaItemStateChanged
 

@@ -7,6 +7,7 @@ package Telas;
 
 import java.util.HashSet;
 import javax.swing.JOptionPane;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import trabalho.HibernateUtil;
@@ -16,14 +17,17 @@ import trabalho.Servicos;
  *
  * @author LUCAS.TEODORO
  */
-public class CadastroServico extends javax.swing.JFrame {
+public class AlteracaoServico extends javax.swing.JFrame {
 
     /**
      * Creates new form CadastrarDepartamento
      */
-    public CadastroServico() {
+    int id;
+    public AlteracaoServico(int id) {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.id = id;
+        CarregarDados();
     }
 
     /**
@@ -42,10 +46,9 @@ public class CadastroServico extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
-        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Cadastro de serviço");
+        setTitle("Alteração de serviço");
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formFocusLost(evt);
@@ -54,7 +57,7 @@ public class CadastroServico extends javax.swing.JFrame {
 
         jLabel3.setText("Descrição:");
 
-        jButton1.setText("Cadastrar");
+        jButton1.setText("Alterar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -75,13 +78,6 @@ public class CadastroServico extends javax.swing.JFrame {
         jTextArea1.setRows(5);
         jScrollPane1.setViewportView(jTextArea1);
 
-        jButton4.setText("Limpar");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -100,8 +96,6 @@ public class CadastroServico extends javax.swing.JFrame {
                             .addComponent(jScrollPane1)))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton4)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3)))
                 .addContainerGap(27, Short.MAX_VALUE))
@@ -119,91 +113,109 @@ public class CadastroServico extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton1)
-                        .addComponent(jButton4))
+                    .addComponent(jButton1)
                     .addComponent(jButton3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    ConsultaServico cs;
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String descricao = jTextField3.getText();
-        String observacao = jTextArea1.getText();
-        try{
-            if(descricao.equals("") ){
-                throw new Exception("Preencha o campo DESCRIÇÃO.");
+        String descricaocomplementar = jTextArea1.getText();
+
+        try {
+            if (ValidaValores()&& ValidaTamanho()) {
+                Session session = HibernateUtil.getSessionFactory().openSession();
+                Servicos s = (Servicos) session.get(Servicos.class, id);
+                Transaction transaction = session.beginTransaction();
+                s.setDescricao(descricao);
+                s.setDescricaoComplementar(descricaocomplementar);
+                
+                session.update(s);
+                transaction.commit();
+                session.close();
+                JOptionPane.showMessageDialog(this,"Serviço alterada com sucesso!",
+                                              "Atenção", JOptionPane.INFORMATION_MESSAGE);
+                if (cs == null) {
+                    cs = new ConsultaServico();
+                }
+                cs.setVisible(true);
+                cs.Listar();
+                this.setVisible(false);
             }
-            
-            Servicos s = new Servicos(descricao, observacao, null);
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            
-            session.save(s);
-            transaction.commit();
-            session.close();
-            JOptionPane.showMessageDialog(this,"Serviço cadastrado com sucesso!",
-                                          "Atenção", JOptionPane.INFORMATION_MESSAGE);
-            Limpar();        
-        }catch (Exception e){
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        Limpar();
         this.setVisible(false);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
         this.requestFocus();
     }//GEN-LAST:event_formFocusLost
-
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        Limpar();
-    }//GEN-LAST:event_jButton4ActionPerformed
     
-    private void Limpar(){
+    private boolean ValidaValores() {
+        try{
+            if ("".equals(jTextField3.getText())){
+                jTextField3.requestFocus();
+                throw new Exception("Campo DESCRIÇÃO obrigatório!");
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean ValidaTamanho() {
+        try {
+            if (jTextField3.getText().length() > 20) {
+                jTextField3.requestFocus();
+                throw new Exception("Campo DESCRIÇÃO maior que o permitido!");
+            } else if (jTextArea1.getText().length() > 500) {
+                jTextArea1.requestFocus();
+                throw new Exception("Campo DESCRIÇÃO COMPLEMENTAR maior que o permitido!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+        
+    }
+    private void limpar(){
         jTextField3.setText("");
         jTextArea1.setText("");
     }
     
+    private void CarregarDados(){
+        try {
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Query query = session.createQuery("from Servicos where codServico = :id");
+            query.setParameter("id", id);
+            query.setMaxResults(1);
+            Servicos s = (Servicos) query.uniqueResult();
+            jTextField3.setText(s.getDescricao());
+            jTextArea1.setText(s.getDescricaoComplementar());
+            session.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(),
+             "ERRO!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(CadastroServico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(CadastroServico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(CadastroServico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(CadastroServico.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadastroServico().setVisible(true);
+                new AlteracaoServico(0).setVisible(true);
             }
         });
     }
@@ -211,7 +223,6 @@ public class CadastroServico extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;

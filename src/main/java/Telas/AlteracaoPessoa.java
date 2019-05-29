@@ -81,8 +81,8 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
             txtTelefone.setText(p.getTelefone());
             txtCelular.setText(p.getCelular());
             txtLogin.setText(p.getLogin());
-            txtSenha.setText(p.getCelular());
-            
+            txtSenha.setText(p.getSenha());
+            session.close();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, e.getMessage(),
              "ERRO!", JOptionPane.ERROR_MESSAGE);
@@ -557,10 +557,6 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
         String senha = txtSenha.getText();
         try {
             if (ValidaValores()&& ValidaTamanho()) {
-                //Pessoas p = new Pessoas(tipo, cpf, nome, cnpj, classificao, estadoCivil, 
-                //                        estado, celular, bairro, endereco, telefone, cidade,
-                //                        login, senha, null, null);
-                
                 Session session = HibernateUtil.getSessionFactory().openSession();
                 Pessoas p = (Pessoas) session.get(Pessoas.class, id);
                 Transaction transaction = session.beginTransaction();
@@ -579,8 +575,13 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
                 p.setBairro(bairro);
                 p.setTelefone(telefone);
                 p.setCelular(celular);
-                p.setLogin(login);
-                p.setSenha(senha);
+                if("Cliente".equals(classificao)) {
+                    p.setLogin("");
+                    p.setSenha("");
+                } else {
+                    p.setLogin(login);
+                    p.setSenha(senha);
+                }
                 session.update(p);
                 transaction.commit();
                 session.close();
@@ -604,11 +605,15 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
     }//GEN-LAST:event_comTipoItemStateChanged
 
     private void comClaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comClaItemStateChanged
-        jPanel3.setVisible(true);
-        if ("Cliente".equals(comCla.getSelectedItem().toString())){
+        
+        if (("Cliente".equals(comCla.getSelectedItem().toString())) || ("".equals(comCla.getSelectedItem().toString()))){
             txtLogin.setText("");
             txtSenha.setText("");
             jPanel3.setVisible(false);
+        } else {
+            txtLogin.setText("");
+            txtSenha.setText("");
+            jPanel3.setVisible(true);
         }
     }//GEN-LAST:event_comClaItemStateChanged
 

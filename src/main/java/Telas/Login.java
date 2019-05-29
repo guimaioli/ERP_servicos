@@ -190,6 +190,7 @@ public class Login extends javax.swing.JFrame {
                     menu = new Menu(2); 
                 }
             }
+            menu.nome = login;
             menu.setVisible(true);
             this.setVisible(false);
         }else {
