@@ -5,11 +5,8 @@
  */
 package Telas;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.sql.ResultSet;
+
 import java.util.List;
-import javax.swing.JOptionPane;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import trabalho.HibernateUtil;
@@ -26,8 +23,6 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        
         txtSenhaErrada.setVisible(false);
         this.setLocationRelativeTo(null);
     }
