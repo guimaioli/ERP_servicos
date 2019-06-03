@@ -1,9 +1,14 @@
 
 package Telas;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
+import trabalho.Contratos;
 import trabalho.HibernateUtil;
 import trabalho.Pessoas;
 
@@ -48,8 +53,6 @@ public class CadastroContrato extends javax.swing.JPanel {
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Cliente:");
-
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Data inicial:");
@@ -162,6 +165,11 @@ public class CadastroContrato extends javax.swing.JPanel {
         );
 
         jButton1.setText("Gravar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Sair");
 
@@ -192,6 +200,32 @@ public class CadastroContrato extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+
+        try{
+            String condpagamento = jComboBox1.getSelectedItem().toString();
+            String situacao = "Pendente";
+            Pessoas cliente = (Pessoas)jComboBox1.getSelectedItem();
+            String valor = (jFormattedTextField3.getText()).replaceAll(",", ".");
+            Double valorContato = Double.parseDouble(valor);
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            Date dataInicial = formato.parse(jFormattedTextField1.getText());
+            Date dataFinal = formato.parse(jFormattedTextField2.getText());
+            
+            Contratos c = new Contratos(cliente, dataInicial, dataFinal, situacao, valorContato, condpagamento, null);
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Transaction transaction = session.beginTransaction();
+            
+            session.save(c);
+            transaction.commit();
+            session.close();
+            JOptionPane.showMessageDialog(this,"Serviço cadastrado com sucesso!",
+                                          "Atenção", JOptionPane.INFORMATION_MESSAGE);        
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
