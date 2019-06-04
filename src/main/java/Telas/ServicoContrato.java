@@ -1,8 +1,6 @@
 
 package Telas;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -16,38 +14,86 @@ import trabalho.Pessoas;
 import trabalho.Servicos;
 import trabalho.Servicoscontrato;
 
-
-public class ServicoContrato extends javax.swing.JPanel {
+public class ServicoContrato extends javax.swing.JFrame {
+    
     int id_servico = 0;
     Contratos contrato;
+    
     public ServicoContrato(Contratos contrato) {
-        this.contrato = contrato;
         initComponents();
+        this.contrato = contrato;
+        this.setLocationRelativeTo(null);
         jTextField1.setText(contrato.getCodContrato().toString());
+        CarregarCombos();
         Limpar();
     }
+    
+    private void Limpar(){
+        jComboBox1.setSelectedIndex(0);
+        jComboBox2.setSelectedIndex(0);
+        jTextArea1.setText("");
+        jFormattedTextField1.setText("");
+    }
+    
+    private void CarregarCombos(){
+        DefaultComboBoxModel fun = new DefaultComboBoxModel();
+        DefaultComboBoxModel ser = new DefaultComboBoxModel();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Query query = session.createQuery("from Pessoas where classificacao = :classificacao");
+        query.setParameter("classificacao", "Funcionário");
+        List<Pessoas> funcionarios = query.list();
+        List<Servicos> servicos = session.createQuery("from Servicos").list();
+        session.close();
+        for (int i=0; i<funcionarios.size();i++){
+            fun.addElement(funcionarios.get(i).getNome());
+        }
+        for (int i=0; i<servicos.size();i++){
+            ser.addElement(servicos.get(i).getDescricao());
+        }
+        
+        jComboBox2.setModel(fun);
+        jComboBox1.setModel(ser);
+    }
 
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        jFormattedTextField1 = new javax.swing.JFormattedTextField();
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
-        jFormattedTextField1 = new javax.swing.JFormattedTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
+        jLabel5 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jButton4 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Serviço de contratos");
+
+        jButton1.setText("Inserir");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Limpar");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -78,28 +124,34 @@ public class ServicoContrato extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(jTable1);
 
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("Valor:");
+
+        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Serviço:");
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Funcionário:");
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Valor:");
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane2.setViewportView(jTextArea1);
 
-        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel5.setText("Observação:");
 
-        jButton1.setText("Inserir");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jTextField1.setEditable(false);
+        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+
+        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel4.setText("Contrato:");
+
+        jButton4.setText("Excluir");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Limpar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                jButton4ActionPerformed(evt);
             }
         });
 
@@ -110,34 +162,14 @@ public class ServicoContrato extends javax.swing.JPanel {
             }
         });
 
-        jButton4.setText("Excluir");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel4.setText("Contrato:");
-
-        jTextField1.setEditable(false);
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel5.setText("Observação:");
-
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 564, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
@@ -164,7 +196,7 @@ public class ServicoContrato extends javax.swing.JPanel {
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(61, 61, 61)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2)))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 276, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(108, 108, 108)
@@ -212,20 +244,34 @@ public class ServicoContrato extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void Limpar(){
-        CarregarCombos();
-        jTextArea1.setText("");
-        jFormattedTextField1.setText("");
-    }
-    private void CarregarCombos(){
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Pessoas> funcionarios = session.createQuery("from Pessoas where classificacao = Funcionários").list();
-        List<Servicos> servicos = session.createQuery("from Servicos").list();
-        session.close();
-        jComboBox2.setModel(new DefaultComboBoxModel(funcionarios.toArray()));
-        jComboBox1.setModel(new DefaultComboBoxModel(servicos.toArray()));
-    }
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try{
+            Pessoas funcionario = (Pessoas)jComboBox2.getSelectedItem();
+            Servicos servico = (Servicos)jComboBox1.getSelectedItem();
+            String valor = (jFormattedTextField1.getText()).replaceAll(",", ".");
+            String observacao = jTextArea1.getText();
+            Double valorContato = Double.parseDouble(valor);
+            
+            Servicoscontrato sc = new Servicoscontrato(contrato, funcionario, servico, valorContato, observacao);
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Transaction transaction = session.beginTransaction();
+            session.save(sc);
+            transaction.commit();
+            session.close();
+            JOptionPane.showMessageDialog(this,"Serviço cadastrado com sucesso!",
+                                          "Atenção", JOptionPane.INFORMATION_MESSAGE);        
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        Limpar();
+    }//GEN-LAST:event_jButton2ActionPerformed
     Servicoscontrato as;
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         if (evt.getClickCount() == 2) {
@@ -254,36 +300,29 @@ public class ServicoContrato extends javax.swing.JPanel {
         jTable1.clearSelection();
     }//GEN-LAST:event_jTable1MouseDragged
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        try{
-            Pessoas funcionario = (Pessoas)jComboBox2.getSelectedItem();
-            Servicos servico = (Servicos)jComboBox1.getSelectedItem();
-            String valor = (jFormattedTextField1.getText()).replaceAll(",", ".");
-            String observacao = jTextArea1.getText();
-            Double valorContato = Double.parseDouble(valor);
-            
-            Servicoscontrato sc = new Servicoscontrato(contrato, funcionario, servico, valorContato, observacao);
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            session.save(sc);
-            transaction.commit();
-            session.close();
-            JOptionPane.showMessageDialog(this,"Serviço cadastrado com sucesso!",
-                                          "Atenção", JOptionPane.INFORMATION_MESSAGE);        
-        }catch (Exception e){
-            JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        if (as == null) {
+            JOptionPane.showMessageDialog(null, "Selecione o registro que deseja alterar.");
+        }else {
+            try {
+                Session session = HibernateUtil.getSessionFactory().openSession();
+                Transaction transation = session.beginTransaction();
+                session.delete(as);
+                transation.commit();
+                session.close();
+                Limpar();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage(),
+                    "ERRO!", JOptionPane.ERROR_MESSAGE);
+            }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        Limpar();
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-       if (as == null) {
-          JOptionPane.showMessageDialog(null, "Selecione o registro que deseja alterar."); 
-       }else {
-           try {
+        if (as == null) {
+            JOptionPane.showMessageDialog(null, "Selecione o registro que deseja alterar.");
+        }else {
+            try {
                 Pessoas funcionario = (Pessoas)jComboBox2.getSelectedItem();
                 Servicos servico = (Servicos)jComboBox1.getSelectedItem();
                 String valor = (jFormattedTextField1.getText()).replaceAll(",", ".");
@@ -299,32 +338,22 @@ public class ServicoContrato extends javax.swing.JPanel {
                 transation.commit();
                 session.close();
                 Limpar();
-           } catch (Exception e) {
-               JOptionPane.showMessageDialog(this, e.getMessage(),
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage(),
                     "ERRO!", JOptionPane.ERROR_MESSAGE);
-           }
- 
-       }
+            }
+
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        if (as == null) {
-          JOptionPane.showMessageDialog(null, "Selecione o registro que deseja alterar."); 
-       }else {
-           try {
-                Session session = HibernateUtil.getSessionFactory().openSession();
-                Transaction transation = session.beginTransaction();
-                session.delete(as);
-                transation.commit();
-                session.close();
-                Limpar();
-           } catch (Exception e) {
-               JOptionPane.showMessageDialog(this, e.getMessage(),
-                    "ERRO!", JOptionPane.ERROR_MESSAGE);
-           }
-       }
-    }//GEN-LAST:event_jButton4ActionPerformed
 
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ServicoContrato(null).setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

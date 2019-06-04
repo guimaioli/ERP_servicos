@@ -6,30 +6,63 @@ import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import trabalho.Contratos;
 import trabalho.HibernateUtil;
 import trabalho.Pessoas;
 
-public class CadastroContrato extends javax.swing.JPanel {
+public class CadastroContrato extends javax.swing.JFrame {
 
     public CadastroContrato() {
         initComponents();
-        CarregaCliente();
+        this.setLocationRelativeTo(null);
+        CarregaComboCliente();
         jPanel2.setVisible(false);
     }
     
-    private void CarregaCliente() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        List<Pessoas> clientes = session.createQuery("from Pessoas").list();
-        session.close();
-        jComboBox1.setModel(new DefaultComboBoxModel(clientes.toArray()));
+    private boolean validavalores(){
+        try{
+            if ("".equals(jComboBox1.getSelectedItem().toString())){
+                jComboBox1.requestFocus();
+                throw new Exception("Campo CLIENTE obrigatório!");
+            } else if ("".equals(jComboBox2.getSelectedItem().toString())){
+                jComboBox2.requestFocus();
+                throw new Exception("Campo CONDIÇÃO DE PAGAMENTO obrigatório!");
+            } else if ("".equals(jFormattedTextField1.getText().replaceAll("\\D", ""))){
+                jFormattedTextField1.requestFocus();
+                throw new Exception("Campo DATA INICIAL obrigatório!");
+            } else if ("".equals(jFormattedTextField2.getText().replaceAll("\\D", ""))){
+                jFormattedTextField2.requestFocus();
+                throw new Exception("Campo DATA FINAL obrigatório!");
+            }
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
+
+    private void CarregaComboCliente() {
+        DefaultComboBoxModel dml = new DefaultComboBoxModel();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Query query = session.createQuery("from Pessoas where classificacao = :classificacao");
+        query.setParameter("classificacao", "Cliente");
+        List<Pessoas> clientes = query.list();
+        session.close();
+        for (int i=0; i<clientes.size();i++){
+            dml.addElement(clientes.get(i).getNome());
+        }
+        jComboBox1.setModel(dml);
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox();
@@ -46,8 +79,23 @@ public class CadastroContrato extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Contratos");
+
+        jButton1.setText("Gravar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Sair");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
@@ -60,9 +108,17 @@ public class CadastroContrato extends javax.swing.JPanel {
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Data final:");
 
-        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
+        try {
+            jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
 
-        jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.DateFormatter()));
+        try {
+            jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Condição de pagamento:");
@@ -73,6 +129,7 @@ public class CadastroContrato extends javax.swing.JPanel {
         jLabel5.setText("Valor do contrato:");
 
         jFormattedTextField3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        jFormattedTextField3.setEnabled(false);
 
         jLabel6.setText("Situação:");
 
@@ -132,7 +189,7 @@ public class CadastroContrato extends javax.swing.JPanel {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jFormattedTextField3, javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 81, Short.MAX_VALUE))
+                .addGap(0, 17, Short.MAX_VALUE))
             .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
@@ -164,17 +221,8 @@ public class CadastroContrato extends javax.swing.JPanel {
                 .addContainerGap(19, Short.MAX_VALUE))
         );
 
-        jButton1.setText("Gravar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setText("Sair");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
@@ -199,34 +247,50 @@ public class CadastroContrato extends javax.swing.JPanel {
                     .addComponent(jButton2))
                 .addContainerGap())
         );
+
+        pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    ServicoContrato sc;
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
         try{
-            String condpagamento = jComboBox1.getSelectedItem().toString();
-            String situacao = "Pendente";
-            Pessoas cliente = (Pessoas)jComboBox1.getSelectedItem();
-            String valor = (jFormattedTextField3.getText()).replaceAll(",", ".");
-            Double valorContato = Double.parseDouble(valor);
-            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-            Date dataInicial = formato.parse(jFormattedTextField1.getText());
-            Date dataFinal = formato.parse(jFormattedTextField2.getText());
-            
-            Contratos c = new Contratos(cliente, dataInicial, dataFinal, situacao, valorContato, condpagamento, null);
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            
-            session.save(c);
-            transaction.commit();
-            session.close();
-            JOptionPane.showMessageDialog(this,"Serviço cadastrado com sucesso!",
-                                          "Atenção", JOptionPane.INFORMATION_MESSAGE);        
+            if (validavalores()){
+                String condpagamento = jComboBox1.getSelectedItem().toString();
+                String situacao = "Pendente";
+                Pessoas cliente = (Pessoas)jComboBox1.getSelectedItem();
+                String valor = (jFormattedTextField3.getText()).replaceAll(",", ".");
+                Double valorContato = Double.parseDouble(valor);
+                SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+                Date dataInicial = formato.parse(jFormattedTextField1.getText());
+                Date dataFinal = formato.parse(jFormattedTextField2.getText());
+
+                Contratos c = new Contratos(cliente, dataInicial, dataFinal, situacao, valorContato, condpagamento, null);
+                Session session = HibernateUtil.getSessionFactory().openSession();
+                Transaction transaction = session.beginTransaction();
+
+                session.save(c);
+                transaction.commit();
+                session.close();
+                if (sc == null){
+                    sc = new ServicoContrato(c);
+                }
+                sc.setVisible(true); 
+            }
         }catch (Exception e){
             JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    public static void main(String args[]) {
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new CadastroContrato().setVisible(true);
+            }
+        });
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
