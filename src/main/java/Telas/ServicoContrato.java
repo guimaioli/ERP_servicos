@@ -5,9 +5,11 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DefaultEditorKit;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+import org.hibernate.type.StandardBasicTypes;
 import trabalho.Contratos;
 import trabalho.HibernateUtil;
 import trabalho.Pessoas;
@@ -23,9 +25,13 @@ public class ServicoContrato extends javax.swing.JFrame {
         initComponents();
         this.contrato = contrato;
         this.setLocationRelativeTo(null);
-        jTextField1.setText(contrato.getCodContrato().toString());
+        if (contrato != null){
+            jTextField1.setText(contrato.getCodContrato().toString());
+        }
         CarregarCombos();
         Limpar();
+        jFormattedTextField1.setText("R$ ");
+        CarregaTabela();
     }
     
     private void Limpar(){
@@ -36,25 +42,36 @@ public class ServicoContrato extends javax.swing.JFrame {
     }
     
     private void CarregarCombos(){
-        DefaultComboBoxModel fun = new DefaultComboBoxModel();
-        DefaultComboBoxModel ser = new DefaultComboBoxModel();
         Session session = HibernateUtil.getSessionFactory().openSession();
         Query query = session.createQuery("from Pessoas where classificacao = :classificacao");
         query.setParameter("classificacao", "Funcionário");
         List<Pessoas> funcionarios = query.list();
         List<Servicos> servicos = session.createQuery("from Servicos").list();
         session.close();
-        for (int i=0; i<funcionarios.size();i++){
-            fun.addElement(funcionarios.get(i).getNome());
-        }
-        for (int i=0; i<servicos.size();i++){
-            ser.addElement(servicos.get(i).getDescricao());
-        }
-        
-        jComboBox2.setModel(fun);
-        jComboBox1.setModel(ser);
+        jComboBox1.setModel(new DefaultComboBoxModel(servicos.toArray())); 
+        jComboBox2.setModel(new DefaultComboBoxModel(funcionarios.toArray())); 
     }
-
+    private void CarregaTabela(){
+        ((DefaultTableModel)jTable1.getModel()).setRowCount(0);
+        try{          
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Query query = session.createQuery("from Servicoscontrato where codContrato = :contrato");
+            query.setParameter("contrato", contrato.getCodContrato());
+            List<Servicoscontrato> servicos = query.list();
+            for (int i = 0;i<servicos.size();i++){
+                String descricaoservico = servicos.get(i).getServicos().getDescricao();
+                String funcionario = servicos.get(i).getPessoas().getNome();
+                Double valor = servicos.get(i).getValor();
+                String valorS = "R$ " + String.valueOf(valor);
+                valorS = valorS.replaceAll(".", ",");
+                String linha[] = new String[]{descricaoservico, funcionario, valorS};
+                ((DefaultTableModel)jTable1.getModel()).addRow(linha);
+            }
+            session.close();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
+        }
+    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -77,9 +94,15 @@ public class ServicoContrato extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jButton4 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Serviço de contratos");
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                formFocusLost(evt);
+            }
+        });
 
         jButton1.setText("Inserir");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -144,6 +167,7 @@ public class ServicoContrato extends javax.swing.JFrame {
 
         jTextField1.setEditable(false);
         jTextField1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel4.setText("Contrato:");
@@ -159,6 +183,13 @@ public class ServicoContrato extends javax.swing.JFrame {
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Sair");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
             }
         });
 
@@ -208,6 +239,10 @@ public class ServicoContrato extends javax.swing.JFrame {
                 .addGap(40, 40, 40)
                 .addComponent(jButton4)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton5)
+                .addGap(21, 21, 21))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -241,8 +276,10 @@ public class ServicoContrato extends javax.swing.JFrame {
                     .addComponent(jButton3)
                     .addComponent(jButton4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(28, 28, 28))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton5)
+                .addContainerGap())
         );
 
         pack();
@@ -252,9 +289,13 @@ public class ServicoContrato extends javax.swing.JFrame {
         try{
             Pessoas funcionario = (Pessoas)jComboBox2.getSelectedItem();
             Servicos servico = (Servicos)jComboBox1.getSelectedItem();
-            String valor = (jFormattedTextField1.getText()).replaceAll(",", ".");
+            // tiro cifrão
+            String valor = jFormattedTextField1.getText();
+            String valor2 = valor.substring(valor.indexOf(" ")+1, valor.length());
+            // formato 
+            valor2 = valor2.replaceAll(",", ".");
             String observacao = jTextArea1.getText();
-            Double valorContato = Double.parseDouble(valor);
+            Double valorContato = Double.parseDouble(valor2);
             
             Servicoscontrato sc = new Servicoscontrato(contrato, funcionario, servico, valorContato, observacao);
             Session session = HibernateUtil.getSessionFactory().openSession();
@@ -263,7 +304,9 @@ public class ServicoContrato extends javax.swing.JFrame {
             transaction.commit();
             session.close();
             JOptionPane.showMessageDialog(this,"Serviço cadastrado com sucesso!",
-                                          "Atenção", JOptionPane.INFORMATION_MESSAGE);        
+                                          "Atenção", JOptionPane.INFORMATION_MESSAGE); 
+            Limpar();
+            CarregaTabela();
         }catch (Exception e){
             JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
         }
@@ -346,6 +389,32 @@ public class ServicoContrato extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
+        this.requestFocus();
+    }//GEN-LAST:event_formFocusLost
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        calculaTotal();
+        if ("à vista".equals(contrato.getCondPagamento())){
+            
+        }
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton5ActionPerformed
+    private void calculaTotal(){
+        double valor = 0;
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Query query = session.createQuery("from Servicoscontrato where codContrato = :contrato");
+        query.setParameter("contrato", contrato.getCodContrato());
+        List<Servicoscontrato> servicos = query.list();
+        for(int i=0; i<servicos.size();i++){
+            valor = valor + servicos.get(i).getValor();
+        }
+        Transaction transaction = session.beginTransaction();
+        contrato.setValorContrato(valor);
+        session.update(contrato);
+        transaction.commit();
+        session.close();
+    }
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -360,6 +429,7 @@ public class ServicoContrato extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JFormattedTextField jFormattedTextField1;

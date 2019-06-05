@@ -57,7 +57,11 @@ public class Servicos  implements java.io.Serializable {
     public void setServicoscontratos(Set servicoscontratos) {
         this.servicoscontratos = servicoscontratos;
     }
-
+    
+    @Override
+    public String toString() {
+        return descricao;
+    }
 
 
 

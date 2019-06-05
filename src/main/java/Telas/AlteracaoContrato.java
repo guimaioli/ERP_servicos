@@ -1,6 +1,7 @@
 
 package Telas;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -13,12 +14,25 @@ import trabalho.Contratos;
 import trabalho.HibernateUtil;
 import trabalho.Pessoas;
 
-public class CadastroContrato extends javax.swing.JFrame {
-
-    public CadastroContrato() {
+public class AlteracaoContrato extends javax.swing.JFrame {
+    Contratos contrato;
+    public AlteracaoContrato(Contratos contrato) {
         initComponents();
         this.setLocationRelativeTo(null);
+        this.contrato = contrato;
         CarregaComboCliente();
+        CarregaValores();        
+    }
+    
+    private void CarregaValores(){
+        jTextField1.setText(contrato.getCodContrato().toString());
+        jTextField2.setText(contrato.getSituacao());
+        jComboBox1.setSelectedItem(contrato.getPessoas().getNome());
+        DateFormat formataData = new SimpleDateFormat("ddMMyyyy");
+        jFormattedTextField1.setText(formataData.format(contrato.getDataInicial()));
+        jFormattedTextField2.setText(formataData.format(contrato.getDataFim()));
+        jComboBox2.setSelectedItem(contrato.getCondPagamento());
+        jFormattedTextField3.setText(String.valueOf(contrato.getValorContrato()));
     }
     
     private boolean validavalores(){
@@ -69,16 +83,22 @@ public class CadastroContrato extends javax.swing.JFrame {
         jComboBox2 = new javax.swing.JComboBox();
         jLabel5 = new javax.swing.JLabel();
         jFormattedTextField3 = new javax.swing.JFormattedTextField();
+        jLabel6 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jLabel7 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Contratos");
+        setTitle("Alteração de contrato");
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formFocusLost(evt);
             }
         });
 
-        jButton1.setText("Gravar");
+        jButton1.setText("Alterar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -118,7 +138,7 @@ public class CadastroContrato extends javax.swing.JFrame {
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("Condição de pagamento:");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "à vista", "a prazo" }));
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A vista", "A prazo" }));
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("Valor do contrato:");
@@ -178,6 +198,26 @@ public class CadastroContrato extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jLabel6.setText("Nº contrato");
+
+        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
+        jTextField1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextField1.setEnabled(false);
+
+        jLabel7.setText("Situação:");
+
+        jTextField2.setEnabled(false);
+
+        jButton3.setText("Serviços");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Duplicatas");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -187,27 +227,53 @@ public class CadastroContrato extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)))
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(67, 67, 67)
+                        .addComponent(jLabel7)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField2)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(19, 19, 19)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel6)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addComponent(jTextField1)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel7))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton2)
+                    .addComponent(jButton3)
+                    .addComponent(jButton4))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    ServicoContrato sc;
+    
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try{
             if (validavalores()){
@@ -220,18 +286,20 @@ public class CadastroContrato extends javax.swing.JFrame {
                 SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
                 Date dataInicial = formato.parse(jFormattedTextField1.getText());
                 Date dataFinal = formato.parse(jFormattedTextField2.getText());
-
-                Contratos c = new Contratos(cliente, dataInicial, dataFinal, situacao, valorContato, condpagamento, null);
                 Session session = HibernateUtil.getSessionFactory().openSession();
                 Transaction transaction = session.beginTransaction();
-
-                session.save(c);
+                contrato.setCondPagamento(condpagamento);
+                contrato.setSituacao(situacao);
+                contrato.setPessoas(cliente);
+                contrato.setValorContrato(valorContato);
+                contrato.setDataInicial(dataInicial);
+                contrato.setDataFim(dataFinal);
+                session.update(contrato);
                 transaction.commit();
                 session.close();
-                if (sc == null){
-                    sc = new ServicoContrato(c);
-                }
-                sc.setVisible(true); 
+                JOptionPane.showMessageDialog(this,"Contrato alterado com sucesso!",
+                                          "Atenção", JOptionPane.INFORMATION_MESSAGE); 
+                this.setVisible(false);
             }
         }catch (Exception e){
             JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
@@ -245,11 +313,19 @@ public class CadastroContrato extends javax.swing.JFrame {
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
         this.requestFocus();
     }//GEN-LAST:event_formFocusLost
+    
+    ServicoContrato sc;
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        if (sc == null){
+            sc = new ServicoContrato(contrato);
+        }
+       sc.setVisible(true);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new CadastroContrato().setVisible(true);
+                new AlteracaoContrato(null).setVisible(true);
             }
         });
     }
@@ -257,6 +333,8 @@ public class CadastroContrato extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JFormattedTextField jFormattedTextField1;
@@ -267,6 +345,10 @@ public class CadastroContrato extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

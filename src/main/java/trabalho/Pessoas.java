@@ -177,6 +177,11 @@ public class Pessoas  implements java.io.Serializable {
     public void setContratoses(Set contratoses) {
         this.contratoses = contratoses;
     }
+    
+    @Override
+    public String toString() {
+        return nome;
+    }
 
 
 

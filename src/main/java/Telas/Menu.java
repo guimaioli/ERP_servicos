@@ -297,9 +297,13 @@ public class Menu extends javax.swing.JFrame {
         }
         cc.setVisible(true);
     }//GEN-LAST:event_jButton8ActionPerformed
-
+    
+    ConsultaContrato con;
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        // TODO add your handling code here:
+        if (con == null){
+            con = new ConsultaContrato();
+        }
+        con.setVisible(true);
     }//GEN-LAST:event_jButton9ActionPerformed
     
     public static void main(String args[]) {
