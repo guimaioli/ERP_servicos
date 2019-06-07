@@ -92,6 +92,7 @@ public class AlteracaoContrato extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Alteração de contrato");
+        setResizable(false);
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formFocusLost(evt);
@@ -217,6 +218,11 @@ public class AlteracaoContrato extends javax.swing.JFrame {
         });
 
         jButton4.setText("Duplicatas");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -321,6 +327,13 @@ public class AlteracaoContrato extends javax.swing.JFrame {
         }
        sc.setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
+    DuplicataContrato dc;
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        if (dc == null){
+            dc = new DuplicataContrato(contrato, jFormattedTextField3.getText());
+        }
+        dc.setVisible(true);
+    }//GEN-LAST:event_jButton4ActionPerformed
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {

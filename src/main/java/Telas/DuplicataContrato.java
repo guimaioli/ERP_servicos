@@ -11,16 +11,16 @@ import org.hibernate.Session;
 import trabalho.Contratos;
 import trabalho.Duplicatas;
 import trabalho.HibernateUtil;
-import trabalho.Servicoscontrato;
 
 
 public class DuplicataContrato extends javax.swing.JFrame {
 
     int id = 0;
     Contratos contrato;
-    public DuplicataContrato(Contratos contrato) {
+    public DuplicataContrato(Contratos contrato, String valor) {
         initComponents();
         this.contrato = contrato;
+        jFormattedTextField2.setText(valor);
         CarregaTabela();
     }
 
@@ -186,11 +186,12 @@ public class DuplicataContrato extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
-                    .addComponent(jButton3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton2)
+                        .addComponent(jButton3)
+                        .addComponent(jLabel4)))
                 .addContainerGap())
         );
 
@@ -211,7 +212,7 @@ public class DuplicataContrato extends javax.swing.JFrame {
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new DuplicataContrato(null).setVisible(true);
+                new DuplicataContrato(null, "").setVisible(true);
             }
         });
     }

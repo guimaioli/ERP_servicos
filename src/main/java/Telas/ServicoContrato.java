@@ -98,6 +98,7 @@ public class ServicoContrato extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Serviço de contratos");
+        setResizable(false);
         addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 formFocusLost(evt);
@@ -392,11 +393,13 @@ public class ServicoContrato extends javax.swing.JFrame {
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
         this.requestFocus();
     }//GEN-LAST:event_formFocusLost
-
+    DuplicataContrato dc;
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         calculaTotal();
-        if ("à vista".equals(contrato.getCondPagamento())){
-            
+        if ("a prazo".equals(contrato.getCondPagamento())){
+            if (dc == null){
+                dc = new DuplicataContrato(contrato, String.valueOf(contrato.getValorContrato()));
+            }
         }
         this.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
