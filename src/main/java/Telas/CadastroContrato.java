@@ -98,6 +98,12 @@ public class CadastroContrato extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Cliente:");
 
+        jComboBox1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jComboBox1FocusGained(evt);
+            }
+        });
+
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Data inicial:");
 
@@ -233,6 +239,7 @@ public class CadastroContrato extends javax.swing.JFrame {
                     sc = new ServicoContrato(c);
                 }
                 sc.setVisible(true); 
+                this.setVisible(false);
             }
         }catch (Exception e){
             JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
@@ -246,6 +253,10 @@ public class CadastroContrato extends javax.swing.JFrame {
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
         this.requestFocus();
     }//GEN-LAST:event_formFocusLost
+
+    private void jComboBox1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jComboBox1FocusGained
+        CarregaComboCliente();
+    }//GEN-LAST:event_jComboBox1FocusGained
 
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {

@@ -143,6 +143,7 @@ public class ConsultaPessoa extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.getTableHeader().setResizingAllowed(false);
         jTable1.getTableHeader().setReorderingAllowed(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -277,6 +278,7 @@ public class ConsultaPessoa extends javax.swing.JFrame {
                 ap = new AlteracaoPessoa(id2);
             }
             ap.setVisible(true);
+            this.setVisible(false);
         }
     }//GEN-LAST:event_cmdAlterarActionPerformed
 

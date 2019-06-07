@@ -31,7 +31,7 @@ public class Login extends javax.swing.JFrame {
         txtSenhaErrada = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Principal");
+        setTitle("Acesso ao sistema");
         setResizable(false);
 
         Principal.setName("Principal"); // NOI18N

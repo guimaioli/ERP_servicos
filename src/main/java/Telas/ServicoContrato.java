@@ -156,6 +156,12 @@ public class ServicoContrato extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Serviço:");
 
+        jComboBox1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jComboBox1FocusGained(evt);
+            }
+        });
+
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Funcionário:");
 
@@ -400,9 +406,15 @@ public class ServicoContrato extends javax.swing.JFrame {
             if (dc == null){
                 dc = new DuplicataContrato(contrato, String.valueOf(contrato.getValorContrato()));
             }
+            dc.setVisible(true);
+        } else {
+            this.setVisible(false);
         }
-        this.setVisible(false);
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jComboBox1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jComboBox1FocusGained
+        CarregarCombos();
+    }//GEN-LAST:event_jComboBox1FocusGained
     private void calculaTotal(){
         double valor = 0;
         Session session = HibernateUtil.getSessionFactory().openSession();

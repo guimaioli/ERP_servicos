@@ -91,6 +91,7 @@ public class ConsultaServico extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
+        jTable1.getTableHeader().setResizingAllowed(false);
         jTable1.getTableHeader().setReorderingAllowed(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -187,6 +188,7 @@ public class ConsultaServico extends javax.swing.JFrame {
             as = new AlteracaoServico(id2);
         }
         as.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_cmdAlterarActionPerformed
 
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost

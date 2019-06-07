@@ -587,7 +587,7 @@ public class AlteracaoPessoa extends javax.swing.JFrame {
                     cp = new ConsultaPessoa();
                 }
                 cp.setVisible(true);
-                cp.Listar();
+                cp.Listar(); 
                 this.setVisible(false);
             }
         } catch (Exception e) {
