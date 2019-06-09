@@ -342,7 +342,7 @@ public class ServicoContrato extends javax.swing.JFrame {
                 query.setMaxResults(1);
                 as = (Servicoscontrato) query.uniqueResult();
                 jComboBox1.setSelectedIndex(as.getServicos().getCodServico()-1);
-                jComboBox2.setSelectedItem(as.getPessoas());
+                jComboBox2.getModel().setSelectedItem(as.getPessoas());
                 jFormattedTextField1.setText("R$ "+(as.getValor().toString()).replace(".", ","));
                 jTextArea1.setText(as.getObservacao());
                 session.close();

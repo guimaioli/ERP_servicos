@@ -4,10 +4,7 @@ package Telas;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
-import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import trabalho.Contratos;
@@ -20,14 +17,13 @@ public class AlteracaoContrato extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         this.contrato = contrato;
-        CarregaComboCliente();
         CarregaValores();        
     }
     
     private void CarregaValores(){
         jTextField1.setText(contrato.getCodContrato().toString());
         jTextField2.setText(contrato.getSituacao());
-        jComboBox1.setSelectedItem(contrato.getPessoas().getNome());
+        jTextField3.setText(contrato.getPessoas().getNome());
         DateFormat formataData = new SimpleDateFormat("ddMMyyyy");
         jFormattedTextField1.setText(formataData.format(contrato.getDataInicial()));
         jFormattedTextField2.setText(formataData.format(contrato.getDataFim()));
@@ -37,8 +33,8 @@ public class AlteracaoContrato extends javax.swing.JFrame {
     
     private boolean validavalores(){
         try{
-            if ("".equals(jComboBox1.getSelectedItem().toString())){
-                jComboBox1.requestFocus();
+            if ("".equals(jTextField3.getText())){
+                jTextField3.requestFocus();
                 throw new Exception("Campo CLIENTE obrigatório!");
             } else if ("".equals(jComboBox2.getSelectedItem().toString())){
                 jComboBox2.requestFocus();
@@ -57,14 +53,6 @@ public class AlteracaoContrato extends javax.swing.JFrame {
         return true;
     }
 
-    private void CarregaComboCliente() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Query query = session.createQuery("from Pessoas where classificacao = :classificacao");
-        query.setParameter("classificacao", "Cliente");
-        List<Pessoas> clientes = query.list();
-        session.close();
-        jComboBox1.setModel(new DefaultComboBoxModel(clientes.toArray())); 
-    }
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -74,7 +62,6 @@ public class AlteracaoContrato extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
@@ -83,6 +70,7 @@ public class AlteracaoContrato extends javax.swing.JFrame {
         jComboBox2 = new javax.swing.JComboBox();
         jLabel5 = new javax.swing.JLabel();
         jFormattedTextField3 = new javax.swing.JFormattedTextField();
+        jTextField3 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
@@ -147,6 +135,9 @@ public class AlteracaoContrato extends javax.swing.JFrame {
         jFormattedTextField3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
         jFormattedTextField3.setEnabled(false);
 
+        jTextField3.setEditable(false);
+        jTextField3.setEnabled(false);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -159,17 +150,17 @@ public class AlteracaoContrato extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31)
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 263, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jFormattedTextField3, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jComboBox2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextField3))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -180,8 +171,8 @@ public class AlteracaoContrato extends javax.swing.JFrame {
                     .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1))
+                            .addComponent(jLabel1)
+                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -285,7 +276,6 @@ public class AlteracaoContrato extends javax.swing.JFrame {
             if (validavalores()){
                 String condpagamento = jComboBox2.getSelectedItem().toString();
                 String situacao = "Pendente";
-                Pessoas cliente = (Pessoas)jComboBox1.getSelectedItem();
                 //String valor = (jFormattedTextField3.getText()).replaceAll(",", ".");
                 // na inclusão o valor é 0, quando for incluindo os serviços ele é calculado.
                 Double valorContato = 0.00;
@@ -296,7 +286,6 @@ public class AlteracaoContrato extends javax.swing.JFrame {
                 Transaction transaction = session.beginTransaction();
                 contrato.setCondPagamento(condpagamento);
                 contrato.setSituacao(situacao);
-                contrato.setPessoas(cliente);
                 contrato.setValorContrato(valorContato);
                 contrato.setDataInicial(dataInicial);
                 contrato.setDataFim(dataFinal);
@@ -348,7 +337,6 @@ public class AlteracaoContrato extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JFormattedTextField jFormattedTextField1;
     private javax.swing.JFormattedTextField jFormattedTextField2;
@@ -363,5 +351,6 @@ public class AlteracaoContrato extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 }

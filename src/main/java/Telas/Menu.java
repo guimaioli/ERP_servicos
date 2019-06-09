@@ -179,8 +179,18 @@ public class Menu extends javax.swing.JFrame {
         });
 
         jButton10.setText("Relatório por data");
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
 
         jButton11.setText("Relatório por serviço");
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -307,6 +317,20 @@ public class Menu extends javax.swing.JFrame {
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
         this.requestFocus();
     }//GEN-LAST:event_formFocusLost
+    RELContratoData cd;
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        if (cd == null) {
+           cd = new RELContratoData();
+        }
+        cd.setVisible(true);
+    }//GEN-LAST:event_jButton10ActionPerformed
+    RELContratoServico rcl;
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        if (rcl == null){
+            rcl = new RELContratoServico();
+        }
+        rcl.setVisible(true);
+    }//GEN-LAST:event_jButton11ActionPerformed
     
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {

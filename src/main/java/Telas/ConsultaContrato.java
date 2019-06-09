@@ -43,18 +43,20 @@ public class ConsultaContrato extends javax.swing.JFrame {
         try{          
             Session session = HibernateUtil.getSessionFactory().openSession();
             Query query = session.createQuery("from Contratos");
-            List<Contratos> c = query.list();
-            session.close();
-            for (int i = 0;i<c.size();i++){
-                String funcionario = c.get(i).getPessoas().getNome();
-                DateFormat formataData = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                String dataInicial = formataData.format(c.get(i).getDataInicial());
-                String dataFinal = formataData.format(c.get(i).getDataFim());
-                String valor = "R$ " + String.valueOf(c.get(i).getValorContrato()).replace(".",",");
-                String situacao = c.get(i).getSituacao();
-                String linha[] = new String[]{funcionario, dataInicial, dataFinal, valor, situacao};
+            List<Contratos> contratos = query.list();
+            
+            for (int i = 0;i<contratos.size();i++){
+                String contrato = contratos.get(i).getCodContrato().toString();
+                String funcionario = contratos.get(i).getPessoas().getNome();
+                DateFormat formataData = new SimpleDateFormat("dd/MM/yyyy");
+                String dataInicial = formataData.format(contratos.get(i).getDataInicial());
+                String dataFinal = formataData.format(contratos.get(i).getDataFim());
+                String valor = "R$ " + String.valueOf(contratos.get(i).getValorContrato()).replace(".",",");
+                String situacao = contratos.get(i).getSituacao();
+                String linha[] = new String[]{contrato, funcionario, dataInicial, dataFinal, valor, situacao};
                 ((DefaultTableModel)jTable1.getModel()).addRow(linha);
             }
+            session.close();
         }catch(Exception e){
             JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
         }
@@ -67,11 +69,10 @@ public class ConsultaContrato extends javax.swing.JFrame {
             Query query = session.createQuery("from Contratos where situacao = :filtro");
             query.setParameter("filtro", filtro);
             List<Contratos> c = query.list();
-            session.close();
             for (int i = 0;i<c.size();i++){
                 String contrato = c.get(i).getCodContrato().toString();
-                String funcionario = c.get(i).getPessoas().getNome();
-                DateFormat formataData = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                String funcionario = c.get(i).getPessoas().getNome(); 
+                DateFormat formataData = new SimpleDateFormat("dd/MM/yyyy");
                 String dataInicial = formataData.format(c.get(i).getDataInicial());
                 String dataFinal = formataData.format(c.get(i).getDataFim());
                 String valor = "R$ " + String.valueOf(c.get(i).getValorContrato());
@@ -79,6 +80,7 @@ public class ConsultaContrato extends javax.swing.JFrame {
                 String linha[] = new String[]{contrato, funcionario, dataInicial, dataFinal, valor, situacao};
                 ((DefaultTableModel)jTable1.getModel()).addRow(linha);
             }
+            session.close();
         }catch(Exception e){
             JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
         }
@@ -96,6 +98,7 @@ public class ConsultaContrato extends javax.swing.JFrame {
         cmdExcluir = new javax.swing.JButton();
         button1 = new java.awt.Button();
         jComboBox1 = new javax.swing.JComboBox();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("Consulta de contratos");
@@ -122,7 +125,8 @@ public class ConsultaContrato extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setColumnSelectionAllowed(true);
+        jTable1.setCellSelectionEnabled(false);
+        jTable1.setRowSelectionAllowed(true);
         jTable1.getTableHeader().setReorderingAllowed(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -170,8 +174,15 @@ public class ConsultaContrato extends javax.swing.JFrame {
             }
         });
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pendente", "Cancelado", "Finalizado", " ", " " }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Pendente", "Cancelado", "Finalizado", " " }));
         jComboBox1.setSelectedIndex(3);
+
+        jButton1.setText("Finalizar");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -183,7 +194,9 @@ public class ConsultaContrato extends javax.swing.JFrame {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(cmdAlterar)
-                        .addGap(100, 100, 100)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cmdExcluir)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(cmdSair))
@@ -211,7 +224,8 @@ public class ConsultaContrato extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cmdAlterar)
                     .addComponent(cmdSair)
-                    .addComponent(cmdExcluir))
+                    .addComponent(cmdExcluir)
+                    .addComponent(jButton1))
                 .addGap(15, 15, 15))
         );
 
@@ -223,7 +237,7 @@ public class ConsultaContrato extends javax.swing.JFrame {
     }//GEN-LAST:event_cmdSairActionPerformed
 
     private void cmdExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdExcluirActionPerformed
-        if (id2 == 0) {
+        /*if (id2 == 0) {
             JOptionPane.showMessageDialog(null, "Selecione o registro que deseja excluir.");
         } else {
             try {
@@ -255,6 +269,23 @@ public class ConsultaContrato extends javax.swing.JFrame {
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
             }
+        }*/
+        if (id2 == 0) {
+            JOptionPane.showMessageDialog(null, "Selecione o registro que deseja cancelar.");
+        } else {
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Contratos contrato = (Contratos) session.get(Contratos.class, id2);
+             
+            if ("Pendente".equals(contrato.getSituacao())) {
+                Transaction transaction = session.beginTransaction();
+                contrato.setSituacao("Cancelado");
+                session.update(contrato);
+                transaction.commit();
+                session.close();
+                ListarTabela();
+            } else {
+                JOptionPane.showMessageDialog(null, "Contrato não está mais aberto.");
+            }
         }
     }//GEN-LAST:event_cmdExcluirActionPerformed
 
@@ -267,13 +298,17 @@ public class ConsultaContrato extends javax.swing.JFrame {
         if (id2 == 0) {
             JOptionPane.showMessageDialog(null, "Selecione o registro que deseja alterar.");
         } else {
-            if (ac == null){
-                Session session = HibernateUtil.getSessionFactory().openSession();
-                Contratos contrato = (Contratos) session.get(Contratos.class, id2);
-                session.close();
-                ac = new AlteracaoContrato(contrato);
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Contratos contrato = (Contratos) session.get(Contratos.class, id2);
+            session.close();
+            if ("Pendente".equals(contrato.getSituacao())) {
+                if (ac == null){
+                    ac = new AlteracaoContrato(contrato);
+                }
+                ac.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(null, "Contrato não está mais aberto.");
             }
-            ac.setVisible(true);
         }
     }//GEN-LAST:event_cmdAlterarActionPerformed
 
@@ -290,6 +325,26 @@ public class ConsultaContrato extends javax.swing.JFrame {
         jTable1.clearSelection();
     }//GEN-LAST:event_jTable1MouseDragged
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        if (id2 == 0) {
+            JOptionPane.showMessageDialog(null, "Selecione o registro que deseja finalizar.");
+        } else {
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Contratos contrato = (Contratos) session.get(Contratos.class, id2);
+             
+            if ("Pendente".equals(contrato.getSituacao())) {
+                Transaction transaction = session.beginTransaction();
+                contrato.setSituacao("Finalizado");
+                session.update(contrato);
+                transaction.commit();
+                session.close();
+                ListarTabela();
+            } else {
+                JOptionPane.showMessageDialog(null, "Contrato não está mais aberto.");
+            }
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     public static void main(String args[]) {
 
@@ -305,6 +360,7 @@ public class ConsultaContrato extends javax.swing.JFrame {
     private javax.swing.JButton cmdAlterar;
     private javax.swing.JButton cmdExcluir;
     private javax.swing.JButton cmdSair;
+    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
