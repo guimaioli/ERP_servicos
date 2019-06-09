@@ -61,7 +61,7 @@
               <Group type="103" groupAlignment="1" attributes="0">
                   <Component id="button1" alignment="1" min="-2" pref="20" max="-2" attributes="0"/>
                   <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                      <Component id="jLabel1" alignment="3" pref="24" max="32767" attributes="0"/>
+                      <Component id="jLabel1" alignment="3" max="32767" attributes="0"/>
                       <Component id="jComboBox1" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -99,7 +99,6 @@
                 <Column editable="false" title="Situa&#xe7;&#xe3;o" type="java.lang.Object"/>
               </Table>
             </Property>
-            <Property name="cellSelectionEnabled" type="boolean" value="false"/>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="3">
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
@@ -134,7 +133,6 @@
                 </Column>
               </TableColumnModel>
             </Property>
-            <Property name="rowSelectionAllowed" type="boolean" value="true"/>
             <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
               <TableHeader reorderingAllowed="false" resizingAllowed="true"/>
             </Property>
@@ -179,7 +177,7 @@
     <Component class="java.awt.Button" name="button1">
       <Properties>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-          <Color id="Cursor Padr&#xe3;o"/>
+          <Color id="Default Cursor"/>
         </Property>
         <Property name="label" type="java.lang.String" value="filtrar"/>
         <Property name="name" type="java.lang.String" value="" noResource="true"/>

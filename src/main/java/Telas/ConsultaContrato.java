@@ -300,7 +300,6 @@ public class ConsultaContrato extends javax.swing.JFrame {
         } else {
             Session session = HibernateUtil.getSessionFactory().openSession();
             Contratos contrato = (Contratos) session.get(Contratos.class, id2);
-            session.close();
             if ("Pendente".equals(contrato.getSituacao())) {
                 if (ac == null){
                     ac = new AlteracaoContrato(contrato);
@@ -309,6 +308,7 @@ public class ConsultaContrato extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(null, "Contrato não está mais aberto.");
             }
+            session.close();
         }
     }//GEN-LAST:event_cmdAlterarActionPerformed
 
