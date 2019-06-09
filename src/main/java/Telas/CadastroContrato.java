@@ -1,11 +1,15 @@
 
 package Telas;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.text.MaskFormatter;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -19,6 +23,29 @@ public class CadastroContrato extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         CarregaComboCliente();
+        Limpar();
+    }
+    
+    private void Limpar(){
+        jComboBox1.setSelectedIndex(0);
+        jComboBox2.setSelectedIndex(0);
+
+        jFormattedTextField1.setText("        ");
+        jFormattedTextField2.setText("        ");
+        jFormattedTextField3.setText("");
+        
+        /*try {
+            jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }
+
+        try {
+            jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
+        } catch (java.text.ParseException ex) {
+            ex.printStackTrace();
+        }*/
+
     }
     
     private boolean validavalores(){
@@ -221,8 +248,6 @@ public class CadastroContrato extends javax.swing.JFrame {
                 String condpagamento = jComboBox2.getSelectedItem().toString();
                 String situacao = "Pendente";
                 Pessoas cliente = (Pessoas)jComboBox1.getSelectedItem();
-                //String valor = (jFormattedTextField3.getText()).replaceAll(",", ".");
-                // na inclusão o valor é 0, quando for incluindo os serviços ele é calculado.
                 Double valorContato = 0.00;
                 SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
                 Date dataInicial = formato.parse(jFormattedTextField1.getText());

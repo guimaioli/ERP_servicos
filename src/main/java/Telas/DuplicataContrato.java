@@ -2,28 +2,45 @@
 package Telas;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import trabalho.Contratos;
 import trabalho.Duplicatas;
 import trabalho.HibernateUtil;
+import trabalho.Pessoas;
+import trabalho.Servicos;
+import trabalho.Servicoscontrato;
 
 
 public class DuplicataContrato extends javax.swing.JFrame {
 
-    int id = 0;
+    int id = 1;
+    
+    int idTabela = 0;
     Contratos contrato;
     public DuplicataContrato(Contratos contrato, String valor) {
         initComponents();
+        this.setLocationRelativeTo(null);
         this.contrato = contrato;
-        jFormattedTextField2.setText(valor);
+        jTextField1.setText(contrato.getCodContrato().toString());
+        jTextField2.setText("R$ " + valor.replace(".", ","));
         CarregaTabela();
+        Limpar();
     }
 
+    private void Limpar(){
+        jFormattedTextField1.setText("");
+        jFormattedTextField3.setText("R$ ");
+    }
+    
     private void CarregaTabela(){
         ((DefaultTableModel)jTable1.getModel()).setRowCount(0);
         try{          
@@ -32,13 +49,14 @@ public class DuplicataContrato extends javax.swing.JFrame {
             query.setParameter("contrato", contrato.getCodContrato());
             List<Duplicatas> duplicatas = query.list();
             for (int i = 0;i<duplicatas.size();i++){
-                String sequencia = duplicatas.get(i).getCodigo().toString();
-                DateFormat formataData = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                String sequencial = String.valueOf(duplicatas.get(i).getSequencial());
+                DateFormat formataData = new SimpleDateFormat("dd/MM/yyyy");
                 String data = formataData.format(duplicatas.get(i).getDataVencimento());
                 Double valor = duplicatas.get(i).getValor();
                 String valorS = "R$ " + String.valueOf(valor);
-                valorS = valorS.replaceAll(".", ",");
-                String linha[] = new String[]{sequencia, data, valorS};
+                valorS = valorS.replace(".", ",");
+                id = i + 1;
+                String linha[] = new String[]{sequencial, data, valorS};
                 ((DefaultTableModel)jTable1.getModel()).addRow(linha);
             }
             session.close();
@@ -55,7 +73,6 @@ public class DuplicataContrato extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jFormattedTextField1 = new javax.swing.JFormattedTextField();
         jLabel2 = new javax.swing.JLabel();
-        jFormattedTextField2 = new javax.swing.JFormattedTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
@@ -63,8 +80,10 @@ public class DuplicataContrato extends javax.swing.JFrame {
         jButton3 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jFormattedTextField3 = new javax.swing.JFormattedTextField();
+        jTextField2 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Duplicatas");
 
         jTextField1.setEditable(false);
         jTextField1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
@@ -84,9 +103,6 @@ public class DuplicataContrato extends javax.swing.JFrame {
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Valor:");
-
-        jFormattedTextField2.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-        jFormattedTextField2.setEnabled(false);
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -118,15 +134,32 @@ public class DuplicataContrato extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jButton1.setText("Inserir");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setText("Excluir");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
 
         jButton3.setText("Sair");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel5.setText("Contrato:");
 
         jFormattedTextField3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+
+        jTextField2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -136,14 +169,6 @@ public class DuplicataContrato extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 428, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
-                        .addGap(48, 48, 48)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton3))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
@@ -160,7 +185,15 @@ public class DuplicataContrato extends javax.swing.JFrame {
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addGap(48, 48, 48)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton3)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -185,27 +218,95 @@ public class DuplicataContrato extends javax.swing.JFrame {
                         .addComponent(jButton1)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2)
-                        .addComponent(jButton3)
-                        .addComponent(jLabel4)))
-                .addContainerGap())
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jButton3)
+                    .addComponent(jButton2))
+                .addGap(19, 19, 19))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    Duplicatas duplicata;
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
-        id = Integer.parseInt(
-                    ((DefaultTableModel) jTable1.getModel()).getValueAt(jTable1.getSelectedRow(), 0).toString());
+        if (evt.getClickCount() == 2) {
+            id = Integer.parseInt(
+                ((DefaultTableModel) jTable1.getModel()).getValueAt(jTable1.getSelectedRow(), 0).toString());
+            try {
+                Session session = HibernateUtil.getSessionFactory().openSession();
+                Query query = session.createQuery("from Duplicatas where sequencial = :id and codContrato = :codigo");
+                query.setParameter("codigo", contrato.getCodContrato());
+                query.setParameter("id", id);
+                query.setMaxResults(1);
+                duplicata = (Duplicatas) query.uniqueResult();
+                
+                DateFormat formataData = new SimpleDateFormat("ddMMyyyy");
+                jFormattedTextField1.setText(formataData.format(duplicata.getDataVencimento()));
+                jFormattedTextField3.setText((duplicata.getValor().toString()).replaceAll(".", ","));
+                
+                session.close();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage(),
+                    "ERRO!", JOptionPane.ERROR_MESSAGE);
+            }
+        } 
     }//GEN-LAST:event_jTable1MouseClicked
 
     private void jTable1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseDragged
         jTable1.clearSelection();
     }//GEN-LAST:event_jTable1MouseDragged
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try{
+            SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+            Date data = formato.parse(jFormattedTextField1.getText());
+            String valor = jFormattedTextField3.getText();
+            String valor2 = valor.substring(valor.indexOf(" ")+1, valor.length());
+            Locale ptBR = new Locale("pt", "BR");
+            NumberFormat format = NumberFormat.getInstance(ptBR);
+            Number number = format.parse(valor2);
+            double valorContrato = number.doubleValue();
+            
+            //Servicoscontrato sc = new Servicoscontrato(contrato, funcionario, servico, valorContato, observacao);
+            Duplicatas duplicata = new Duplicatas(id,contrato.getCodContrato(), data, valorContrato);
+            Session session = HibernateUtil.getSessionFactory().openSession();
+            Transaction transaction = session.beginTransaction();
+            session.save(duplicata);
+            transaction.commit();
+            session.close();
+            JOptionPane.showMessageDialog(this,"Duplicata cadastrada com sucesso!",
+                                          "Atenção", JOptionPane.INFORMATION_MESSAGE); 
+            Limpar();
+            CarregaTabela();
+            id = id + 1;
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        if (duplicata == null) {
+            JOptionPane.showMessageDialog(null, "Selecione o registro que deseja excluir.");
+        }else {
+            try {
+                Session session = HibernateUtil.getSessionFactory().openSession();
+                Transaction transation = session.beginTransaction();
+                session.delete(duplicata);
+                transation.commit();
+                session.close();
+                Limpar();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(this, e.getMessage(),
+                    "ERRO!", JOptionPane.ERROR_MESSAGE);
+            }
+        }        
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        this.setVisible(false);
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     
     public static void main(String args[]) {
@@ -222,7 +323,6 @@ public class DuplicataContrato extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JFormattedTextField jFormattedTextField2;
     private javax.swing.JFormattedTextField jFormattedTextField3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -231,5 +331,6 @@ public class DuplicataContrato extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

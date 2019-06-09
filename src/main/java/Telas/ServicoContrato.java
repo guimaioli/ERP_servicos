@@ -1,7 +1,9 @@
 
 package Telas;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -38,7 +40,7 @@ public class ServicoContrato extends javax.swing.JFrame {
         jComboBox1.setSelectedIndex(0);
         jComboBox2.setSelectedIndex(0);
         jTextArea1.setText("");
-        jFormattedTextField1.setText("");
+        jFormattedTextField1.setText("R$ ");
     }
     
     private void CarregarCombos(){
@@ -59,12 +61,13 @@ public class ServicoContrato extends javax.swing.JFrame {
             query.setParameter("contrato", contrato.getCodContrato());
             List<Servicoscontrato> servicos = query.list();
             for (int i = 0;i<servicos.size();i++){
+                String servico = servicos.get(i).getServicos().getCodServico().toString();
                 String descricaoservico = servicos.get(i).getServicos().getDescricao();
                 String funcionario = servicos.get(i).getPessoas().getNome();
                 Double valor = servicos.get(i).getValor();
                 String valorS = "R$ " + String.valueOf(valor);
-                valorS = valorS.replaceAll(".", ",");
-                String linha[] = new String[]{descricaoservico, funcionario, valorS};
+                valorS = valorS.replace(".", ",");
+                String linha[] = new String[]{servico, descricaoservico, funcionario, valorS};
                 ((DefaultTableModel)jTable1.getModel()).addRow(linha);
             }
             session.close();
@@ -124,11 +127,11 @@ public class ServicoContrato extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Serviço", "Funcionário", "Valor"
+                "Serviço", "Descrição", "Funcionário", "Valor"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -296,15 +299,19 @@ public class ServicoContrato extends javax.swing.JFrame {
         try{
             Pessoas funcionario = (Pessoas)jComboBox2.getSelectedItem();
             Servicos servico = (Servicos)jComboBox1.getSelectedItem();
-            // tiro cifrão
             String valor = jFormattedTextField1.getText();
+            if ("R$ ".equals(valor)){
+                jFormattedTextField1.requestFocus();
+                throw new Exception("Campo VALOR obrigatório!");
+            }
             String valor2 = valor.substring(valor.indexOf(" ")+1, valor.length());
-            // formato 
-            valor2 = valor2.replaceAll(",", ".");
             String observacao = jTextArea1.getText();
-            Double valorContato = Double.parseDouble(valor2);
+            Locale ptBR = new Locale("pt", "BR");
+            NumberFormat format = NumberFormat.getInstance(ptBR);
+            Number number = format.parse(valor2);
+            double valorContrato = number.doubleValue();
             
-            Servicoscontrato sc = new Servicoscontrato(contrato, funcionario, servico, valorContato, observacao);
+            Servicoscontrato sc = new Servicoscontrato(contrato, funcionario, servico, valorContrato, observacao);
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
             session.save(sc);
@@ -329,14 +336,14 @@ public class ServicoContrato extends javax.swing.JFrame {
                 ((DefaultTableModel) jTable1.getModel()).getValueAt(jTable1.getSelectedRow(), 0).toString());
             try {
                 Session session = HibernateUtil.getSessionFactory().openSession();
-                Query query = session.createQuery("from ServicosContrato where codContrato = :codigo and codServico = :servico");
+                Query query = session.createQuery("from Servicoscontrato where codContrato = :codigo and codServico = :servico");
                 query.setParameter("codigo", contrato.getCodContrato());
                 query.setParameter("servico", id_servico);
                 query.setMaxResults(1);
                 as = (Servicoscontrato) query.uniqueResult();
-                jComboBox1.setSelectedItem(as.getServicos());
+                jComboBox1.setSelectedIndex(as.getServicos().getCodServico()-1);
                 jComboBox2.setSelectedItem(as.getPessoas());
-                jFormattedTextField1.setText((as.getValor().toString()).replaceAll(".", ","));
+                jFormattedTextField1.setText("R$ "+(as.getValor().toString()).replace(".", ","));
                 jTextArea1.setText(as.getObservacao());
                 session.close();
             } catch (Exception e) {
@@ -352,7 +359,7 @@ public class ServicoContrato extends javax.swing.JFrame {
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         if (as == null) {
-            JOptionPane.showMessageDialog(null, "Selecione o registro que deseja alterar.");
+            JOptionPane.showMessageDialog(null, "Selecione o registro que deseja excluir.");
         }else {
             try {
                 Session session = HibernateUtil.getSessionFactory().openSession();
@@ -361,6 +368,7 @@ public class ServicoContrato extends javax.swing.JFrame {
                 transation.commit();
                 session.close();
                 Limpar();
+                CarregaTabela();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, e.getMessage(),
                     "ERRO!", JOptionPane.ERROR_MESSAGE);
@@ -399,6 +407,7 @@ public class ServicoContrato extends javax.swing.JFrame {
     private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
         this.requestFocus();
     }//GEN-LAST:event_formFocusLost
+    
     DuplicataContrato dc;
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         calculaTotal();
@@ -407,6 +416,7 @@ public class ServicoContrato extends javax.swing.JFrame {
                 dc = new DuplicataContrato(contrato, String.valueOf(contrato.getValorContrato()));
             }
             dc.setVisible(true);
+            this.setVisible(false);
         } else {
             this.setVisible(false);
         }

@@ -33,6 +33,11 @@ public class Login extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Acesso ao sistema");
         setResizable(false);
+        addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                formFocusLost(evt);
+            }
+        });
 
         Principal.setName("Principal"); // NOI18N
 
@@ -181,6 +186,10 @@ public class Login extends javax.swing.JFrame {
             txtSenhaErrada.setVisible(true);
         }   
     }//GEN-LAST:event_LoginActionPerformed
+
+    private void formFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_formFocusLost
+        this.requestFocus();
+    }//GEN-LAST:event_formFocusLost
 
 
     public static void main(String args[]) {

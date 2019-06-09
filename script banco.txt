@@ -36,6 +36,7 @@ FOREIGN KEY (codCliente) REFERENCES pessoas(codigo)
 
 CREATE TABLE duplicatas (
 codigo INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+sequencial INTEGER UNSIGNED NOT NULL,
 codContrato INTEGER UNSIGNED NOT NULL,
 dataVencimento DATE NULL,
 valor REAL(7,2) NULL,

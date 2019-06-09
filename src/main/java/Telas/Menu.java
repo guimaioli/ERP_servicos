@@ -290,11 +290,9 @@ public class Menu extends javax.swing.JFrame {
         cp.setVisible(true);
     }//GEN-LAST:event_jButton5ActionPerformed
     
-    CadastroContrato cc;
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        if (cc == null){
-            cc = new CadastroContrato();
-        }
+        CadastroContrato cc;
+        cc = new CadastroContrato();
         cc.setVisible(true);
     }//GEN-LAST:event_jButton8ActionPerformed
     

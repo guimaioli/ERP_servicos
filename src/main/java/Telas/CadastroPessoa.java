@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Telas;
 
 
@@ -14,16 +9,9 @@ import org.hibernate.Transaction;
 import trabalho.HibernateUtil;
 import trabalho.Pessoas;
 
-/**
- *
- * @author Lucas
- */
+
 public class CadastroPessoa extends javax.swing.JFrame {
-    
-    
-    /**
-     * Creates new form Cadastro
-     */
+
     public CadastroPessoa() {
         initComponents();
         this.setLocationRelativeTo(null);

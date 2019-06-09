@@ -50,7 +50,7 @@ public class ConsultaContrato extends javax.swing.JFrame {
                 DateFormat formataData = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
                 String dataInicial = formataData.format(c.get(i).getDataInicial());
                 String dataFinal = formataData.format(c.get(i).getDataFim());
-                String valor = "R$ " + String.valueOf(c.get(i).getValorContrato());
+                String valor = "R$ " + String.valueOf(c.get(i).getValorContrato()).replace(".",",");
                 String situacao = c.get(i).getSituacao();
                 String linha[] = new String[]{funcionario, dataInicial, dataFinal, valor, situacao};
                 ((DefaultTableModel)jTable1.getModel()).addRow(linha);
