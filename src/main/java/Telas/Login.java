@@ -67,7 +67,7 @@ public class Login extends javax.swing.JFrame {
 
         txtSenhaErrada.setFont(new java.awt.Font("Arial", 1, 11)); // NOI18N
         txtSenhaErrada.setForeground(new java.awt.Color(255, 0, 0));
-        txtSenhaErrada.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        txtSenhaErrada.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         txtSenhaErrada.setText("     a");
 
         javax.swing.GroupLayout PrincipalLayout = new javax.swing.GroupLayout(Principal);
@@ -88,11 +88,11 @@ public class Login extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtLogin)
-                            .addComponent(txtSenhaErrada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(PrincipalLayout.createSequentialGroup()
                                 .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))))
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtSenhaErrada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(32, Short.MAX_VALUE))
         );
         PrincipalLayout.setVerticalGroup(
@@ -109,8 +109,8 @@ public class Login extends javax.swing.JFrame {
                     .addComponent(jLabel2)
                     .addComponent(txtSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtSenhaErrada, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(txtSenhaErrada, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(PrincipalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Login)
                     .addComponent(Cad))
@@ -142,6 +142,15 @@ public class Login extends javax.swing.JFrame {
         boolean sucess = false;
         String cargo = "";
         String nome = "";
+        
+        if(login.isEmpty() || senha.isEmpty()) {
+            txtSenha.setText("");
+            txtSenha.requestFocus();
+            txtSenhaErrada.setText("<html><body>Os campos Usuário e Senha<br>não podem estar vazios!</body></html>");
+            txtSenhaErrada.setVisible(true);
+            return;
+        }
+        
         if (((login.toUpperCase()).equals("SUPERVISOR"))&&((senha.toUpperCase()).equals("SUPERVISOR"))){
              sucess = true;
              cargo = "Diretor";
