@@ -125,8 +125,6 @@ public class ConsultaContrato extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        jTable1.setCellSelectionEnabled(false);
-        jTable1.setRowSelectionAllowed(true);
         jTable1.getTableHeader().setReorderingAllowed(false);
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -158,7 +156,7 @@ public class ConsultaContrato extends javax.swing.JFrame {
             }
         });
 
-        cmdExcluir.setText("Exluir");
+        cmdExcluir.setText("Cancelar");
         cmdExcluir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdExcluirActionPerformed(evt);
@@ -216,7 +214,7 @@ public class ConsultaContrato extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(button1, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 227, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -309,6 +307,7 @@ public class ConsultaContrato extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(null, "Contrato não está mais aberto.");
             }
             session.close();
+            ListarTabela();
         }
     }//GEN-LAST:event_cmdAlterarActionPerformed
 
