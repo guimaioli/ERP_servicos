@@ -67,12 +67,12 @@ public class CadastroPessoa extends javax.swing.JFrame {
             } else if ("".equals(txtBairro.getText())){
                 txtBairro.requestFocus();
                 throw new Exception("Campo BAIRRO obrigatório!");
-            } else if ("".equals(txtTelefone.getText())){
+            /*} else if ("".equals(txtTelefone.getText())){
                 txtTelefone.requestFocus();
                 throw new Exception("Campo TELEFONE inválido!");
             } else if ("".equals(txtCelular.getText())){
                 txtCelular.requestFocus();
-                throw new Exception("Campo CELULAR inválido!");
+                throw new Exception("Campo CELULAR inválido!");*/
             }else if ("".equals(txtLogin.getText())){
                 if (temLogin()){
                     txtLogin.requestFocus();
