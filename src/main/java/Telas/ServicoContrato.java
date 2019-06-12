@@ -17,6 +17,12 @@ import trabalho.HibernateUtil;
 import trabalho.Pessoas;
 import trabalho.Servicos;
 import trabalho.Servicoscontrato;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
+import java.util.Locale;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 
 public class ServicoContrato extends javax.swing.JFrame {
     
@@ -31,16 +37,28 @@ public class ServicoContrato extends javax.swing.JFrame {
             jTextField1.setText(contrato.getCodContrato().toString());
         }
         CarregarCombos();
+        configuraCampoValor();
         Limpar();
-        jFormattedTextField1.setText("R$ ");
         CarregaTabela();
+    }
+    
+    private void configuraCampoValor() {
+        Locale brazil = new Locale("pt", "BR");
+        DecimalFormatSymbols real = new DecimalFormatSymbols(brazil);
+        DecimalFormat realMoney = new DecimalFormat("###,###,##0.00", real);
+        NumberFormatter formatter = new NumberFormatter(realMoney);
+        
+        formatter.setFormat(realMoney);
+        formatter.setAllowsInvalid(false);
+        
+        jFormattedTextField1.setFormatterFactory(new DefaultFormatterFactory(formatter));
     }
     
     private void Limpar(){
         jComboBox1.setSelectedIndex(0);
         jComboBox2.setSelectedIndex(0);
         jTextArea1.setText("");
-        jFormattedTextField1.setText("R$ ");
+        jFormattedTextField1.setText("0,00");
     }
     
     private void CarregarCombos(){
@@ -50,6 +68,7 @@ public class ServicoContrato extends javax.swing.JFrame {
         List<Pessoas> funcionarios = query.list();
         List<Servicos> servicos = session.createQuery("from Servicos").list();
         session.close();
+
         jComboBox1.setModel(new DefaultComboBoxModel(servicos.toArray())); 
         jComboBox2.setModel(new DefaultComboBoxModel(funcionarios.toArray())); 
     }
@@ -152,9 +171,7 @@ public class ServicoContrato extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("Valor:");
-
-        jFormattedTextField1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
+        jLabel3.setText("Valor (R$):");
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel1.setText("Serviço:");
@@ -300,16 +317,21 @@ public class ServicoContrato extends javax.swing.JFrame {
             Pessoas funcionario = (Pessoas)jComboBox2.getSelectedItem();
             Servicos servico = (Servicos)jComboBox1.getSelectedItem();
             String valor = jFormattedTextField1.getText();
-            if ("R$ ".equals(valor)){
-                jFormattedTextField1.requestFocus();
-                throw new Exception("Campo VALOR obrigatório!");
-            }
-            String valor2 = valor.substring(valor.indexOf(" ")+1, valor.length());
+//            if (valor.isEmpty() || valor.equalsIgnoreCase("0,00")){
+//                jFormattedTextField1.requestFocus();
+//                throw new Exception("Campo VALOR obrigatório!");
+//            }
+            //String valor2 = valor.substring(valor.indexOf(" ")+1, valor.length());
             String observacao = jTextArea1.getText();
             Locale ptBR = new Locale("pt", "BR");
             NumberFormat format = NumberFormat.getInstance(ptBR);
-            Number number = format.parse(valor2);
+            Number number = format.parse(valor);
             double valorContrato = number.doubleValue();
+            
+            if(valorContrato <= 0) {
+                jFormattedTextField1.requestFocus();
+                throw new Exception("Campo VALOR não poder ser menor ou igual a zero (0)!");
+            }
             
             Servicoscontrato sc = new Servicoscontrato(contrato, funcionario, servico, valorContrato, observacao);
             Session session = HibernateUtil.getSessionFactory().openSession();
@@ -329,7 +351,9 @@ public class ServicoContrato extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Limpar();
     }//GEN-LAST:event_jButton2ActionPerformed
+    
     Servicoscontrato as;
+    
     private void jTable1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTable1MouseClicked
         if (evt.getClickCount() == 2) {
             id_servico = Integer.parseInt(
@@ -340,10 +364,19 @@ public class ServicoContrato extends javax.swing.JFrame {
                 query.setParameter("codigo", contrato.getCodContrato());
                 query.setParameter("servico", id_servico);
                 query.setMaxResults(1);
+                
                 as = (Servicoscontrato) query.uniqueResult();
+                
+                Query queryServico = session.createQuery("from Servicos where codServico = :servico");
+                queryServico.setParameter("servico", id_servico);
+                queryServico.setMaxResults(1);
+                
+                Servicos servico = (Servicos) queryServico.uniqueResult();
+                
                 jComboBox1.setSelectedIndex(as.getServicos().getCodServico()-1);
+                jComboBox1.setSelectedItem(as.getServicos().getCodServico().toString() + "-" + as.getServicos().getDescricao());
                 jComboBox2.setSelectedItem(as.getPessoas().getNome());
-                jFormattedTextField1.setText("R$ "+(as.getValor().toString()).replace(".", ","));
+                jFormattedTextField1.setValue(new Float(as.getValor()));
                 jTextArea1.setText(as.getObservacao());
                 session.close();
             } catch (Exception e) {
