@@ -19,6 +19,7 @@ public class AlteracaoContrato extends javax.swing.JFrame {
         CarregaValores();        
     }
     
+    
     private void CarregaValores(){
         jTextField1.setText(contrato.getCodContrato().toString());
         jTextField2.setText(contrato.getSituacao());
@@ -27,7 +28,7 @@ public class AlteracaoContrato extends javax.swing.JFrame {
         jFormattedTextField1.setText(formataData.format(contrato.getDataInicial()));
         jFormattedTextField2.setText(formataData.format(contrato.getDataFim()));
         jTextField5.setText(contrato.getCondPagamento());
-        jTextField4.setText("R$ "+String.valueOf(contrato.getValorContrato()).replace(".", ","));
+        jTextField4.setText(String.valueOf(contrato.getValorContrato()).replace(".", ","));
     }
     
     private boolean validavalores(){
@@ -124,7 +125,7 @@ public class AlteracaoContrato extends javax.swing.JFrame {
         jLabel4.setText("Condição de pagamento:");
 
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel5.setText("Valor do contrato:");
+        jLabel5.setText("Valor do contrato (R$):");
 
         jTextField3.setEditable(false);
         jTextField3.setEnabled(false);
