@@ -2,6 +2,8 @@
 package Telas;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,6 +11,8 @@ import java.util.List;
 import java.util.Locale;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -32,13 +36,25 @@ public class DuplicataContrato extends javax.swing.JFrame {
         this.contrato = contrato;
         jTextField1.setText(contrato.getCodContrato().toString());
         jTextField2.setText("R$ " + valor.replace(".", ","));
+        configuraCampoValor();
         CarregaTabela();
         Limpar();
     }
 
+    private void configuraCampoValor() {
+        Locale brazil = new Locale("pt", "BR");
+        DecimalFormatSymbols real = new DecimalFormatSymbols(brazil);
+        DecimalFormat realMoney = new DecimalFormat("###,###,##0.00", real);
+        NumberFormatter formatter = new NumberFormatter(realMoney);
+        
+        formatter.setFormat(realMoney);
+        formatter.setAllowsInvalid(false);
+        
+        jFormattedTextField2.setFormatterFactory(new DefaultFormatterFactory(formatter));
+    }
     private void Limpar(){
         jFormattedTextField1.setText("");
-        jFormattedTextField3.setText("R$ ");
+        jFormattedTextField2.setText("0,00");
     }
     
     private void CarregaTabela(){
@@ -79,8 +95,8 @@ public class DuplicataContrato extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
-        jFormattedTextField3 = new javax.swing.JFormattedTextField();
         jTextField2 = new javax.swing.JTextField();
+        jFormattedTextField2 = new javax.swing.JFormattedTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Duplicatas");
@@ -102,14 +118,14 @@ public class DuplicataContrato extends javax.swing.JFrame {
         }
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Valor:");
+        jLabel2.setText("Valor (R$):");
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Sequencia", "Vencimento", "Valor"
+                "Duplicata", "Vencimento", "Valor"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -157,8 +173,6 @@ public class DuplicataContrato extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
         jLabel5.setText("Contrato:");
 
-        jFormattedTextField3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(java.text.NumberFormat.getCurrencyInstance())));
-
         jTextField2.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -178,7 +192,7 @@ public class DuplicataContrato extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jFormattedTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(18, 18, 18)
                                 .addComponent(jButton1))
                             .addGroup(layout.createSequentialGroup()
@@ -210,13 +224,13 @@ public class DuplicataContrato extends javax.swing.JFrame {
                             .addComponent(jLabel1)
                             .addComponent(jFormattedTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel2)
-                            .addComponent(jFormattedTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jFormattedTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(9, 9, 9)
                         .addComponent(jButton1)))
-                .addGap(18, 18, 18)
+                .addGap(21, 21, 21)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -244,7 +258,7 @@ public class DuplicataContrato extends javax.swing.JFrame {
                 
                 DateFormat formataData = new SimpleDateFormat("ddMMyyyy");
                 jFormattedTextField1.setText(formataData.format(duplicata.getDataVencimento()));
-                jFormattedTextField3.setText((duplicata.getValor().toString()).replaceAll(".", ","));
+                jFormattedTextField2.setText((duplicata.getValor().toString()).replaceAll(".", ","));
                 
                 session.close();
             } catch (Exception e) {
@@ -262,14 +276,18 @@ public class DuplicataContrato extends javax.swing.JFrame {
         try{
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
             Date data = formato.parse(jFormattedTextField1.getText());
-            String valor = jFormattedTextField3.getText();
+            String valor = jFormattedTextField2.getText();
             String valor2 = valor.substring(valor.indexOf(" ")+1, valor.length());
             Locale ptBR = new Locale("pt", "BR");
             NumberFormat format = NumberFormat.getInstance(ptBR);
             Number number = format.parse(valor2);
             double valorContrato = number.doubleValue();
             
-            //Servicoscontrato sc = new Servicoscontrato(contrato, funcionario, servico, valorContato, observacao);
+            if(valorContrato <= 0) {
+                jFormattedTextField1.requestFocus();
+                throw new Exception("Campo VALOR não poder ser menor ou igual a zero!");
+            }
+            
             Duplicatas duplicata = new Duplicatas(id,contrato.getCodContrato(), data, valorContrato);
             Session session = HibernateUtil.getSessionFactory().openSession();
             Transaction transaction = session.beginTransaction();
@@ -323,7 +341,7 @@ public class DuplicataContrato extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JFormattedTextField jFormattedTextField1;
-    private javax.swing.JFormattedTextField jFormattedTextField3;
+    private javax.swing.JFormattedTextField jFormattedTextField2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;

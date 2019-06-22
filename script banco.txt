@@ -46,7 +46,7 @@ PRIMARY KEY (codigo)
 
 CREATE TABLE servicos (
 codServico INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-descricao VARCHAR(20) NOT NULL,
+descricao VARCHAR(40) NOT NULL,
 descricaoComplementar VARCHAR(500) NULL,
 PRIMARY KEY (codServico) 
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;

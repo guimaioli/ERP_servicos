@@ -317,11 +317,6 @@ public class ServicoContrato extends javax.swing.JFrame {
             Pessoas funcionario = (Pessoas)jComboBox2.getSelectedItem();
             Servicos servico = (Servicos)jComboBox1.getSelectedItem();
             String valor = jFormattedTextField1.getText();
-//            if (valor.isEmpty() || valor.equalsIgnoreCase("0,00")){
-//                jFormattedTextField1.requestFocus();
-//                throw new Exception("Campo VALOR obrigatório!");
-//            }
-            //String valor2 = valor.substring(valor.indexOf(" ")+1, valor.length());
             String observacao = jTextArea1.getText();
             Locale ptBR = new Locale("pt", "BR");
             NumberFormat format = NumberFormat.getInstance(ptBR);
@@ -330,7 +325,7 @@ public class ServicoContrato extends javax.swing.JFrame {
             
             if(valorContrato <= 0) {
                 jFormattedTextField1.requestFocus();
-                throw new Exception("Campo VALOR não poder ser menor ou igual a zero (0)!");
+                throw new Exception("Campo VALOR não poder ser menor ou igual a zero!");
             }
             
             Servicoscontrato sc = new Servicoscontrato(contrato, funcionario, servico, valorContrato, observacao);

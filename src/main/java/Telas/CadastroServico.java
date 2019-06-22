@@ -1,7 +1,6 @@
 
 package Telas;
 
-import java.util.HashSet;
 import javax.swing.JOptionPane;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -15,7 +14,22 @@ public class CadastroServico extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
     }
-
+    private boolean ValidaTamanho() {
+        try {
+            if (jTextField3.getText().length() > 40) {
+                jTextField3.requestFocus();
+                throw new Exception("Campo DESCRIÇÃO maior que o permitido!");
+            } else if (jTextArea1.getText().length() > 500) {
+                jTextArea1.requestFocus();
+                throw new Exception("Campo DESCRIÇÃO COMPLEMENTAR maior que o permitido!");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, e.getMessage(), "ERRO!", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
+        
+    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -111,17 +125,18 @@ public class CadastroServico extends javax.swing.JFrame {
             if(descricao.equals("") ){
                 throw new Exception("Preencha o campo DESCRIÇÃO.");
             }
-            
-            Servicos s = new Servicos(descricao, observacao, null);
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            Transaction transaction = session.beginTransaction();
-            
-            session.save(s);
-            transaction.commit();
-            session.close();
-            JOptionPane.showMessageDialog(this,"Serviço cadastrado com sucesso!",
-                                          "Atenção", JOptionPane.INFORMATION_MESSAGE);
-            Limpar();        
+            if (ValidaTamanho()){
+                Servicos s = new Servicos(descricao, observacao, null);
+                Session session = HibernateUtil.getSessionFactory().openSession();
+                Transaction transaction = session.beginTransaction();
+
+                session.save(s);
+                transaction.commit();
+                session.close();
+                JOptionPane.showMessageDialog(this,"Serviço cadastrado com sucesso!",
+                                              "Atenção", JOptionPane.INFORMATION_MESSAGE);
+                Limpar();    
+            }
         }catch (Exception e){
             JOptionPane.showMessageDialog(this,e.getMessage(),"ERRO", JOptionPane.ERROR_MESSAGE);
         }
